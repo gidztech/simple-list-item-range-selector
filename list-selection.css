@@ -1,0 +1,15 @@
+ul {
+    list-style-type: none;
+    cursor: default;
+}
+
+ul li {
+    background: lightblue;
+    width: 200px;
+    padding: 5px;
+    margin-bottom: 1px;
+}
+
+ul li.selected {
+    background: LightCoral;
+}
