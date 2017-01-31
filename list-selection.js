@@ -1,4 +1,5 @@
 (function () {
+
     const ClickModes = {
         CTRL_CLICK_TO_SELECT: 0,
         CLICK_TO_SELECT: 1
