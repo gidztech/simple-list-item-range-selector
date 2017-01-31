@@ -1,6 +1,7 @@
 (function () {
 
     let totalItemCount = $('.list li').length;
+    let lastClickIndexWithoutShift = null;
 
     // disable selecting/dragging text
     $('.list').bind('selectstart dragstart', (e) => {
@@ -16,6 +17,8 @@
         let $listItem = $(this);
 
         if (!e.shiftKey) {
+            lastClickIndexWithoutShift = $listItem.index();
+
             // normal clicking toggles selection
             if (isItemSelected($listItem)) {
                 $listItem.removeClass('selected');
@@ -23,23 +26,32 @@
                 $listItem.addClass('selected')
             }
         } else {
-
             let firstSelectedItemIndex = $('.list li.selected').first().index();
             let selectedItemIndex = $('.list li').index($listItem);
 
-            console.log("first selected item: ", firstSelectedItemIndex, " current selected item: ", selectedItemIndex);
+            console.log("first selected item: ", firstSelectedItemIndex, " current selected item: ", selectedItemIndex, " last selected item without shift: ", lastClickIndexWithoutShift);
 
             if (firstSelectedItemIndex === selectedItemIndex) {
                 // multiple items are selected currently and user wants to reduce range to just the selected item
                 unselectItemsAfterThisItemForwards(selectedItemIndex, totalItemCount);
             } else if (firstSelectedItemIndex < selectedItemIndex) {
-                // user wants to add the next item up until selected item to complete a range
-                selectItemsBetweenFirstSelectionAndThisItemForwards(firstSelectedItemIndex, selectedItemIndex)
-                // the user may be reducing the range as a result, so clear selection after the current selected item
-                unselectItemsAfterThisItemForwards(selectedItemIndex, totalItemCount);
+
+                if (selectedItemIndex  > lastClickIndexWithoutShift) {
+                    // user wants to add the next item up until selected item to complete a range
+                    selectItemsBetweenFirstSelectionAndThisItemForwards(lastClickIndexWithoutShift, selectedItemIndex)
+                    // the user may be reducing the range as a result, so clear selection after the current selected item
+                    unselectItemsAfterThisItemForwards(selectedItemIndex, totalItemCount);
+                    unselectItemsAfterThisItemBackwards(lastClickIndexWithoutShift);
+                } else {
+                    unselectItemsAfterThisItemBackwards(selectedItemIndex);
+                }
+
+
             } else {
                 // user is selecting range upwards
-                selectItemsBetweenFirstSelectionAndThisItemBackwards(firstSelectedItemIndex, selectedItemIndex);
+                selectItemsBetweenLastStandardClickIndexAndThisItemBackwards(lastClickIndexWithoutShift, selectedItemIndex);
+                unselectItemsAfterThisItemForwards(lastClickIndexWithoutShift, totalItemCount);
+
             }
         }
     });
@@ -59,15 +71,29 @@
         }
     }
 
-    function unselectItemsWithinRange(start, end) {
-        if (start < 0 || end <= start) return;
+    function unselectItemsWithinRange(start, end, reverse) {
+        if (start < 0) return;
 
-        for (let i = start; i < end; i++) {
-            let item = $('.list li').get(i);
-            if (item && isItemSelected(item)) {
-                $(item).removeClass('selected');
+        if (reverse && end < start) {
+            for (let i = start; i >= end; i--) {
+                let item = $('.list li').get(i);
+                if (item && isItemSelected(item)) {
+                    $(item).removeClass('selected');
+                }
+            }
+        } else if (!reverse && end > start) {
+            for (let i = start; i <= end; i++) {
+                let item = $('.list li').get(i);
+                if (item && isItemSelected(item)) {
+                    $(item).removeClass('selected');
+                }
             }
         }
+    }
+
+    function unselectItemsAfterThisItemBackwards(lastClickIndexWithoutShift) {
+        let start = lastClickIndexWithoutShift -1;
+        unselectItemsWithinRange(start, 0, true);
     }
 
     function unselectItemsAfterThisItemForwards(selectedItemIndex, totalItemCount) {
@@ -85,9 +111,9 @@
         selectItemsWithinRange(start, end);
     }
 
-    function selectItemsBetweenFirstSelectionAndThisItemBackwards(firstSelectedItemIndex, selectedItemIndex) {
+    function selectItemsBetweenLastStandardClickIndexAndThisItemBackwards(lastClickIndexWithoutShift, selectedItemIndex) {
         let start = selectedItemIndex;
-        let end = firstSelectedItemIndex;
+        let end = lastClickIndexWithoutShift;
 
         selectItemsWithinRange(start, end);
     }
