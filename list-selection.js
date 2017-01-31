@@ -1,27 +1,31 @@
 (function () {
-
     const ClickModes = {
         CTRL_CLICK_TO_SELECT: 0,
         CLICK_TO_SELECT: 1
     };
 
     const clickMode = ClickModes.CLICK_TO_SELECT;
-    let totalItemCount = $('.list li').length;
+
+    let allItemElems = document.querySelectorAll('.list li');
+    let totalItemCount = allItemElems.length;
     let lastClickedIndexWithoutShift = null;
     let newSelection = [];
 
     function setupBindings() {
-        $('.list').bind('selectstart dragstart', (e) => {
-            // disable selecting/dragging text
+        let listElem = document.querySelector('.list');
+        let resetElem = document.querySelector('.reset');
+
+        listElem.addEventListener('selectstart', (e) => {
+            // disable selecting text
             e.preventDefault();
             return false;
         });
 
-        $('.reset').on('click', clearAllSelections);
+        resetElem.addEventListener('click', clearAllSelections);
 
-        $('.list li').on('click', function (e) {
+        [...allItemElems].forEach(elem => elem.addEventListener('click', function(e) {
             updateSelection.call(this, e, updateDOM);
-        });
+        }));
     }
 
     function updateDOM(selection) {
@@ -30,7 +34,7 @@
         for (let i = 0; i < totalItemCount; i++) {
             let item = $('.list li').get(i);
 
-            // TODO: This will cause reflow because we are reading and writing to them dom
+            // TODO: This will cause reflow because we are reading and writing to the dom. Need to look into performance improvements here
             if (item) {
                 if (sortedSelection.includes($(item).index())) {
                     if(!isItemSelected(item)) {
