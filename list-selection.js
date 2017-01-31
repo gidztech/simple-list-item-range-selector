@@ -7,6 +7,7 @@
     const clickMode = ClickModes.CLICK_TO_SELECT;
     let totalItemCount = $('.list li').length;
     let lastClickedIndexWithoutShift = null;
+    let newSelection = [];
 
     function setupBindings() {
         $('.list').bind('selectstart dragstart', (e) => {
@@ -17,11 +18,33 @@
 
         $('.reset').on('click', clearAllSelections);
 
-        $('.list li').on('click', calculateSelection);
+        $('.list li').on('click', function (e) {
+            updateSelection.call(this, e, updateDOM);
+        });
     }
 
+    function updateDOM(selection) {
+        let sortedSelection = selection.concat().sort();
 
-    function calculateSelection(e) {
+        for (let i = 0; i < totalItemCount; i++) {
+            let item = $('.list li').get(i);
+
+            // TODO: This will cause reflow because we are reading and writing to them dom
+            if (item) {
+                if (sortedSelection.includes($(item).index())) {
+                    if(!isItemSelected(item)) {
+                        $(item).addClass('selected');
+                    }
+                } else {
+                    if (isItemSelected(item)) {
+                        $(item).removeClass('selected');
+                    }
+                }
+            }
+        }
+    }
+
+    function updateSelection(e, updateDOM) {
         let $listItem = $(this);
 
         if (!e.shiftKey) {
@@ -30,19 +53,19 @@
             if (isItemSelected($listItem)) {
                 if (clickMode === ClickModes.CTRL_CLICK_TO_SELECT && !e.ctrlKey) {
                     // if user clicks without CTRL key, clear everything and select the one they clicked on
-                    clearAllSelections();
-                    $listItem.addClass('selected');
+                    newSelection = [];
+                    newSelection.push($listItem.index());
                 } else {
                     // CTRL clicking or clicking in CLICK_TO_SELECT mode will unselect the item
-                    $listItem.removeClass('selected');
+                    newSelection.splice(newSelection.indexOf($listItem.index()), 1);
                 }
             } else {
                 if (clickMode === ClickModes.CTRL_CLICK_TO_SELECT && !e.ctrlKey) {
                     // clear all selected items first if not using CTRL key
-                    clearAllSelections();
+                    newSelection = [];
                 }
 
-                $listItem.addClass('selected');
+                newSelection.push($listItem.index());
             }
         } else {
             let firstSelectedItemIndex = $('.list li.selected').first().index();
@@ -77,6 +100,8 @@
                 unselectItemsWithinRange({start: lastClickedIndexWithoutShift + 1, end: totalItemCount, mode: 'forward'});
             }
         }
+
+        updateDOM(newSelection);
     }
 
     function selectItemsWithinRange({start, end}) {
@@ -85,7 +110,7 @@
         for (let i = start; i <= end; i++) {
             let item = $('.list li').get(i);
             if (item && !isItemSelected(item)) {
-                $(item).addClass('selected');
+                newSelection.push($(item).index());
             }
         }
     }
@@ -96,7 +121,7 @@
         function unselectItemAtIndex(index) {
             let item = $('.list li').get(index);
             if (item && isItemSelected(item)) {
-                $(item).removeClass('selected');
+                newSelection.splice(newSelection.indexOf(index), 1);
             }
         }
 
@@ -116,7 +141,8 @@
     }
 
     function clearAllSelections() {
-        unselectItemsWithinRange({start: 0, end: totalItemCount, mode: 'forward'});
+        newSelection = [];
+        updateDOM(newSelection);
     }
 
     setupBindings();
