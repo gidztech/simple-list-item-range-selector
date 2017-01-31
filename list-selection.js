@@ -1,7 +1,14 @@
 (function () {
 
+    const ClickModes = {
+        CTRL_CLICK_TO_SELECT: 0,
+        CLICK_TO_SELECT: 1
+    };
+
+    let clickMode = ClickModes.CLICK_TO_SELECT;
     let totalItemCount = $('.list li').length;
     let lastClickedIndexWithoutShift = null;
+    let anItemIsSelected = false;
 
     // disable selecting/dragging text
     $('.list').bind('selectstart dragstart', (e) => {
@@ -9,9 +16,7 @@
         return false;
     });
 
-    $('.reset').on('click', (e) => {
-        unselectItemsWithinRange({start: 0 + 1, end: totalItemCount, mode: 'forward'});
-    });
+    $('.reset').on('click', clearAllSelections);
 
     $('.list li').on('click', function (e) {
         let $listItem = $(this);
@@ -19,12 +24,18 @@
         if (!e.shiftKey) {
             lastClickedIndexWithoutShift = $listItem.index();
 
-            // normal clicking toggles selection
-            if (isItemSelected($listItem)) {
+            // normal clicking toggles selection in CLICK_TO_SELECT mode
+            if (clickMode === ClickModes.CLICK_TO_SELECT && isItemSelected($listItem)) {
                 $listItem.removeClass('selected');
             } else {
-                $listItem.addClass('selected')
+                // clear all selected items first
+                if (clickMode === ClickModes.CTRL_CLICK_TO_SELECT) {
+                    clearAllSelections();
+                }
+
+                $listItem.addClass('selected');
             }
+
         } else {
             let firstSelectedItemIndex = $('.list li.selected').first().index();
             let selectedItemIndex = $('.list li').index($listItem);
@@ -90,4 +101,9 @@
             }
         }
     }
+
+    function clearAllSelections() {
+        unselectItemsWithinRange({start: 0, end: totalItemCount, mode: 'forward'});
+    }
+
 })();
