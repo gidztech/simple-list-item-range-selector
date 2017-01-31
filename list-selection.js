@@ -1,23 +1,27 @@
 (function () {
-
     const ClickModes = {
         CTRL_CLICK_TO_SELECT: 0,
         CLICK_TO_SELECT: 1
     };
 
-    let clickMode = ClickModes.CLICK_TO_SELECT;
+    const clickMode = ClickModes.CLICK_TO_SELECT;
     let totalItemCount = $('.list li').length;
     let lastClickedIndexWithoutShift = null;
 
-    // disable selecting/dragging text
-    $('.list').bind('selectstart dragstart', (e) => {
-        e.preventDefault();
-        return false;
-    });
+    function setupBindings() {
+        $('.list').bind('selectstart dragstart', (e) => {
+            // disable selecting/dragging text
+            e.preventDefault();
+            return false;
+        });
 
-    $('.reset').on('click', clearAllSelections);
+        $('.reset').on('click', clearAllSelections);
 
-    $('.list li').on('click', function (e) {
+        $('.list li').on('click', calculateSelection);
+    }
+
+
+    function calculateSelection(e) {
         let $listItem = $(this);
 
         if (!e.shiftKey) {
@@ -73,10 +77,6 @@
                 unselectItemsWithinRange({start: lastClickedIndexWithoutShift + 1, end: totalItemCount, mode: 'forward'});
             }
         }
-    });
-
-    function isItemSelected(item) {
-        return $(item).hasClass('selected');
     }
 
     function selectItemsWithinRange({start, end}) {
@@ -93,25 +93,32 @@
     function unselectItemsWithinRange({start, end, mode}) {
         if (start < 0) return;
 
+        function unselectItemAtIndex(index) {
+            let item = $('.list li').get(index);
+            if (item && isItemSelected(item)) {
+                $(item).removeClass('selected');
+            }
+        }
+
         if (mode === 'reverse' && end <= start) {
             for (let i = start; i >= end; i--) {
-                let item = $('.list li').get(i);
-                if (item && isItemSelected(item)) {
-                    $(item).removeClass('selected');
-                }
+                unselectItemAtIndex(i);
             }
         } else if (mode === 'forward' && end > start) {
             for (let i = start; i <= end; i++) {
-                let item = $('.list li').get(i);
-                if (item && isItemSelected(item)) {
-                    $(item).removeClass('selected');
-                }
+                unselectItemAtIndex(i);
             }
         }
+    }
+
+    function isItemSelected(item) {
+        return $(item).hasClass('selected');
     }
 
     function clearAllSelections() {
         unselectItemsWithinRange({start: 0, end: totalItemCount, mode: 'forward'});
     }
+
+    setupBindings();
 
 })();
