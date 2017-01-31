@@ -8,7 +8,6 @@
     let clickMode = ClickModes.CLICK_TO_SELECT;
     let totalItemCount = $('.list li').length;
     let lastClickedIndexWithoutShift = null;
-    let anItemIsSelected = false;
 
     // disable selecting/dragging text
     $('.list').bind('selectstart dragstart', (e) => {
@@ -24,18 +23,23 @@
         if (!e.shiftKey) {
             lastClickedIndexWithoutShift = $listItem.index();
 
-            // normal clicking toggles selection in CLICK_TO_SELECT mode
-            if (clickMode === ClickModes.CLICK_TO_SELECT && isItemSelected($listItem)) {
-                $listItem.removeClass('selected');
+            if (isItemSelected($listItem)) {
+                if (clickMode === ClickModes.CTRL_CLICK_TO_SELECT && !e.ctrlKey) {
+                    // if user clicks without CTRL key, clear everything and select the one they clicked on
+                    clearAllSelections();
+                    $listItem.addClass('selected');
+                } else {
+                    // CTRL clicking or clicking in CLICK_TO_SELECT mode will unselect the item
+                    $listItem.removeClass('selected');
+                }
             } else {
-                // clear all selected items first
-                if (clickMode === ClickModes.CTRL_CLICK_TO_SELECT) {
+                if (clickMode === ClickModes.CTRL_CLICK_TO_SELECT && !e.ctrlKey) {
+                    // clear all selected items first if not using CTRL key
                     clearAllSelections();
                 }
 
                 $listItem.addClass('selected');
             }
-
         } else {
             let firstSelectedItemIndex = $('.list li.selected').first().index();
             let selectedItemIndex = $('.list li').index($listItem);
@@ -54,15 +58,19 @@
                     // if a previous selection is before the last clicked index without a shift, we need to clear it
                     unselectItemsWithinRange({start: lastClickedIndexWithoutShift - 1, end: 0, mode: 'reverse'});
                 } else {
+
+                    // user is selecting from the selected item to the last clicked item without shift
+                    selectItemsWithinRange({start: selectedItemIndex, end: lastClickedIndexWithoutShift -1 });
                     // the user is reducing the selection above the last clicked index without shift, so we need to clear selection before the current selected item
                     unselectItemsWithinRange({start: selectedItemIndex - 1, end: 0, mode: 'reverse'});
+                    // clear items after the last clicked index without shift
+                    unselectItemsWithinRange({start: lastClickedIndexWithoutShift + 1, end: totalItemCount, mode: 'forward'});
                 }
             } else {
                 // user is selecting range upwards, so select between the last clicked index without shift and the selected item
                 selectItemsWithinRange({start: selectedItemIndex, end: lastClickedIndexWithoutShift });
-                // clear selected items after the last clicked index without shift
+                // clear items after the last clicked index without shift
                 unselectItemsWithinRange({start: lastClickedIndexWithoutShift + 1, end: totalItemCount, mode: 'forward'});
-
             }
         }
     });
@@ -85,7 +93,7 @@
     function unselectItemsWithinRange({start, end, mode}) {
         if (start < 0) return;
 
-        if (mode === 'reverse' && end < start) {
+        if (mode === 'reverse' && end <= start) {
             for (let i = start; i >= end; i--) {
                 let item = $('.list li').get(i);
                 if (item && isItemSelected(item)) {
