@@ -7,6 +7,7 @@
     const clickMode = ClickModes.CLICK_TO_SELECT;
 
     let allItemElems = document.querySelectorAll('.list li');
+    let $allItemsElems = $('.list li');
     let totalItemCount = allItemElems.length;
     let lastClickedIndexWithoutShift = null;
     let newSelection = [];
@@ -32,7 +33,7 @@
         let sortedSelection = selection.concat().sort();
 
         for (let i = 0; i < totalItemCount; i++) {
-            let item = $('.list li').get(i);
+            let item = $allItemsElems.get(i);
 
             // TODO: This will cause reflow because we are reading and writing to the dom. Need to look into performance improvements here
             if (item) {
@@ -74,7 +75,7 @@
             }
         } else {
             let firstSelectedItemIndex = $('.list li.selected').first().index();
-            let selectedItemIndex = $('.list li').index($listItem);
+            let selectedItemIndex = $allItemsElems.index($listItem);
 
             console.log("first selected item: ", firstSelectedItemIndex, " current selected item: ", selectedItemIndex, " last selected item without shift: ", lastClickedIndexWithoutShift);
 
@@ -113,7 +114,7 @@
         if (start < 0 || end < start) return;
 
         for (let i = start; i <= end; i++) {
-            let item = $('.list li').get(i);
+            let item = $allItemsElems.get(i);
             if (item && !isItemSelected(item)) {
                 newSelection.push($(item).index());
             }
@@ -123,13 +124,6 @@
     function unselectItemsWithinRange({start, end, mode}) {
         if (start < 0) return;
 
-        function unselectItemAtIndex(index) {
-            let item = $('.list li').get(index);
-            if (item && isItemSelected(item)) {
-                newSelection.splice(newSelection.indexOf(index), 1);
-            }
-        }
-
         if (mode === 'reverse' && end <= start) {
             for (let i = start; i >= end; i--) {
                 unselectItemAtIndex(i);
@@ -137,6 +131,13 @@
         } else if (mode === 'forward' && end > start) {
             for (let i = start; i <= end; i++) {
                 unselectItemAtIndex(i);
+            }
+        }
+
+        function unselectItemAtIndex(index) {
+            let item = $allItemsElems.get(index);
+            if (item && isItemSelected(item)) {
+                newSelection.splice(newSelection.indexOf(index), 1);
             }
         }
     }
