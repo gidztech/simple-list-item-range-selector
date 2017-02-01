@@ -6,22 +6,19 @@
     <link rel="stylesheet" type="text/css" href="list-selection.css">
 </head>
 <body>
-<div>
+
+
+<div class="selection-view">
+</div>
+
+<script id="selectionTemplate" type="text/template">
     <ul class="list">
-        <li>Item 1</li>
-        <li>Item 2</li>
-        <li>Item 3</li>
-        <li>Item 4</li>
-        <li>Item 5</li>
-        <li>Item 6</li>
-        <li>Item 7</li>
-        <li>Item 8</li>
-        <li>Item 9</li>
-        <li>Item 10</li>
+        {{item}}
     </ul>
 
     <button class="reset">Reset</button>
-</div>
+
+</script>
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
 <script src="list-selection.js"></script>

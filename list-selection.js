@@ -1,4 +1,41 @@
 (function () {
+
+    let listItems = [];
+
+    function init() {
+        // setup data
+        setupData();
+        // create view
+        new SelectionView($('.selection-view'));
+    }
+
+    function SelectionView(element) {
+        let el = element;
+        let render = function() {
+            let templateTag = $("#selectionTemplate").html();
+            Mustache.parse(templateTag);
+            var rendered = Mustache.render(templateTag, this.getTemplateData());
+        }
+    }
+
+    function generateTestData() {
+        let items = [];
+
+        for (let i = 0; i < 10; i++) {
+            items.push({index: getNextIndex(), text: "Item " + i});
+        }
+
+        function getNextIndex() {
+            return listItems.length;
+        }
+
+        return items;
+    }
+
+    function setupData() {
+        Array.prototype.push.apply(listItems, generateTestData());
+    }
+
     const ClickModes = {
         CTRL_CLICK_TO_SELECT: 0,
         CLICK_TO_SELECT: 1
@@ -152,5 +189,9 @@
     }
 
     setupBindings();
+
+
+    init();
+
 
 })();
