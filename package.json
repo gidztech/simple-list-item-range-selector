@@ -1,0 +1,15 @@
+{
+  "name": "simple-list-selection-range",
+  "version": "1.0.0",
+  "description": "",
+  "main": "list-selection.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@personal:gidztech/simple-list-selection-range.git"
+  },
+  "author": "",
+  "license": "ISC"
+}
