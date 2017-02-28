@@ -5,23 +5,38 @@
     };
 
     let _clickMode;
-    let _allItemElems = [];
-    let _$allItemsElems = [];
-    let _lastClickedIndexWithoutShift = null;
+    let _allItemElems;
+    let _lastClickedIndexWithoutShift;
     let _newSelection = [];
-    let _selectedClass;
+    let _selectedClassName;
     let _itemsSelector;
+    let _debug = false;
 
-    function init({clickMode, containerSelector, childSelector, resetSelector, selectedClass}) {
-        _clickMode = clickMode;
-        _selectedClass = selectedClass;
-        _itemsSelector = containerSelector + " " + childSelector;
+    function init({clickMode, containerSelector, childSelector, resetSelector, selectedClassName, debug}) {
+        if (isValidClickMode(clickMode)) {
+            _clickMode = clickMode;
+        } else {
+            throw Error('You need to specify a valid clickMode');
+        }
 
-        _allItemElems = document.querySelectorAll(_itemsSelector);
-        _$allItemsElems = $(_itemsSelector); // TODO: Remove jQuery dependency?
+        if (selectedClassName) {
+            _selectedClassName = selectedClassName
+        } else {
+            throw Error('You need to specify a selectedClassName');
+        }
 
         let listElem = document.querySelector(containerSelector);
-        let resetElem = document.querySelector(resetSelector);
+
+        if (!listElem) {
+            throw Error('You need to specify a valid conainerSelector');
+        }
+
+        _itemsSelector = containerSelector + " " + childSelector;
+        _allItemElems = document.querySelectorAll(_itemsSelector);
+
+        if (!_allItemElems) {
+            throw Error('Items were not found using ' + _itemsSelector + ' selector.');
+        }
 
         listElem.addEventListener('selectstart', (e) => {
             // disable selecting text
@@ -29,48 +44,54 @@
             return false;
         });
 
-        resetElem.addEventListener('click', clearAllSelections);
+        if (resetSelector) {
+            let resetElem = document.querySelector(resetSelector);
+            resetElem.addEventListener('click', clearAllSelections);
+        }
 
-        [..._allItemElems].forEach(elem => elem.addEventListener('click', function (e) {
-            updateSelection.call(this, e, updateDOM);
-        }));
+        let i = 0;
+        [..._allItemElems].forEach(elem => {
+            elem.setAttribute('data-slis-index', i++);
+            elem.addEventListener('click', function (e) {
+                updateSelection.call(this, e, updateDOM);
+            });
+        });
+
+        _debug = debug;
     }
 
     function updateDOM(selection) {
         let sortedSelection = selection.concat().sort();
 
-        for (let i = 0; i < _allItemElems.length; i++) {
-            let item = _$allItemsElems.get(i);
-
-            // TODO: This will cause reflow because we are reading and writing to the dom. Need to look into performance improvements here
-            if (item) {
-                if (sortedSelection.includes($(item).index())) {
-                    if (!isItemSelected(item)) {
-                        $(item).addClass(_selectedClass);
-                    }
-                } else {
-                    if (isItemSelected(item)) {
-                        $(item).removeClass(_selectedClass);
-                    }
+        for (let item of _allItemElems) {
+            let index = indexOfItem(item);
+            if (sortedSelection.includes(index)) {
+                if (!isItemSelected(item)) {
+                    item.classList.add(_selectedClassName);
+                }
+            } else {
+                if (isItemSelected(item)) {
+                    item.classList.remove(_selectedClassName);
                 }
             }
         }
     }
 
     function updateSelection(e, updateDOM) {
-        let $listItem = $(this);
+        let item = this;
+        let selectedItemIndex = indexOfItem(item);
 
         if (!e.shiftKey) {
-            _lastClickedIndexWithoutShift = $listItem.index();
+            _lastClickedIndexWithoutShift = selectedItemIndex;
 
-            if (isItemSelected($listItem)) {
+            if (isItemSelected(item)) {
                 if (_clickMode === _ClickModes.CTRL_CLICK_TO_SELECT && !e.ctrlKey) {
                     // if user clicks without CTRL key, clear everything and select the one they clicked on
                     _newSelection = [];
-                    _newSelection.push($listItem.index());
+                    _newSelection.push(selectedItemIndex);
                 } else {
                     // CTRL clicking or clicking in CLICK_TO_SELECT mode will unselect the item
-                    _newSelection.splice(_newSelection.indexOf($listItem.index()), 1);
+                    _newSelection.splice(_newSelection.indexOf(selectedItemIndex), 1);
                 }
             } else {
                 if (_clickMode === _ClickModes.CTRL_CLICK_TO_SELECT && !e.ctrlKey) {
@@ -78,13 +99,15 @@
                     _newSelection = [];
                 }
 
-                _newSelection.push($listItem.index());
+                _newSelection.push(selectedItemIndex);
             }
         } else {
-            let firstSelectedItemIndex = $(_itemsSelector + "." + _selectedClass).first().index();
-            let selectedItemIndex = _$allItemsElems.index($listItem);
+            let firstSelectedItem = document.querySelector(_itemsSelector + "." + _selectedClassName);
+            let firstSelectedItemIndex = indexOfItem(firstSelectedItem);
 
-            console.log("first selected item: ", firstSelectedItemIndex, " current selected item: ", selectedItemIndex, " last selected item without shift: ", _lastClickedIndexWithoutShift);
+            if (_debug) {
+                console.log("first selected item: ", firstSelectedItemIndex, " current selected item: ", selectedItemIndex, " last selected item without shift: ", _lastClickedIndexWithoutShift);
+            }
 
             if (firstSelectedItemIndex === selectedItemIndex) {
                 // multiple items are selected currently and user wants to reduce range to just the selected item
@@ -129,9 +152,10 @@
         if (start < 0 || end < start) return;
 
         for (let i = start; i <= end; i++) {
-            let item = _$allItemsElems.get(i);
+            let item = _allItemElems[i];
             if (item && !isItemSelected(item)) {
-                _newSelection.push($(item).index());
+                let index = indexOfItem(item);
+                _newSelection.push(index);
             }
         }
     }
@@ -150,7 +174,7 @@
         }
 
         function unselectItemAtIndex(index) {
-            let item = _$allItemsElems.get(index);
+            let item = _allItemElems[index];
             if (item && isItemSelected(item)) {
                 _newSelection.splice(_newSelection.indexOf(index), 1);
             }
@@ -158,7 +182,7 @@
     }
 
     function isItemSelected(item) {
-        return $(item).hasClass(_selectedClass);
+        return item.classList.contains(_selectedClassName)
     }
 
     function clearAllSelections() {
@@ -166,15 +190,40 @@
         updateDOM(_newSelection);
     }
 
-    let SimpleListSelectionRange = {
+    function indexOfItem(item) {
+        try {
+            return parseInt(item.getAttribute('data-slis-index'));
+        }
+        catch(e) {
+            throw Error('Index doesn\'t exist. Something went dreadfully wrong.');
+        }
+    }
+
+    function isValidClickMode(value) {
+        let isValid = false;
+
+        if (typeof value === 'undefined' || value === '') {
+            return false;
+        }
+
+        for (let mode in _ClickModes) {
+            if (value === _ClickModes[mode]) {
+                isValid = true;
+            }
+        }
+
+        return isValid;
+    }
+
+    let SimpleListItemSelector = {
         init,
         ClickModes: _ClickModes
     };
 
-    if (typeof module !== "undefined") {
-        module.exports = SimpleListSelectionRange;
+    if (typeof module !== 'undefined') {
+        module.exports = SimpleListItemSelector;
     } else {
-        window.SimpleListSelectionRange = SimpleListSelectionRange
+        window.SimpleListItemSelector = SimpleListItemSelector
     }
 })();
 

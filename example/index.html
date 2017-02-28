@@ -20,15 +20,14 @@
 </ul>
 
 <button class="reset">Reset</button>
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
 <script src="../list-selection.js"></script>
 <script>
-    SimpleListSelectionRange.init({
-        clickMode: SimpleListSelectionRange.ClickModes.CLICK_TO_SELECT,
+    SimpleListItemSelector.init({
+        clickMode: SimpleListItemSelector.ClickModes.CLICK_TO_SELECT,
         containerSelector: '.list',
         childSelector: 'li',
         resetSelector: '.reset',
-        selectedClass: 'selected'
+        selectedClassName: 'selected'
     });
 </script>
 
