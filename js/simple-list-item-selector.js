@@ -220,10 +220,7 @@
         ClickModes: _ClickModes
     };
 
-    if (typeof module !== 'undefined') {
-        module.exports = SimpleListItemSelector;
-    } else {
-        window.SimpleListItemSelector = SimpleListItemSelector
-    }
+    module.exports = SimpleListItemSelector;
+
 })();
 

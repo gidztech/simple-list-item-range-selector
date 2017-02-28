@@ -1,15 +1,23 @@
 {
-  "name": "simple-list-selection-range",
+  "name": "simple-list-item-selector",
   "version": "1.0.0",
-  "description": "",
-  "main": "list-selection.js",
+  "description": "Allows you to turn items in a list into selections",
+  "main": "bundle.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "webpack": "webpack --watch"
   },
   "repository": {
     "type": "git",
-    "url": "git@personal:gidztech/simple-list-selection-range.git"
+    "url": "https://github.com/gidztech/simple-list-selection-range.git"
   },
   "author": "",
-  "license": "ISC"
+  "license": "MIT",
+  "devDependencies": {
+    "babel-core": "^6.23.1",
+    "babel-loader": "^6.3.2",
+    "babel-preset-es2015": "^6.22.0",
+    "webpack": "^2.2.1",
+    "webpack-dev-server": "^2.4.1"
+  }
 }

@@ -1,36 +1,33 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Simple List Selection Range</title>
-    <link rel="stylesheet" type="text/css" href="list-selection.css">
-</head>
-<body>
+    <head>
+        <meta charset="UTF-8">
+        <title>Simple List Item Selector</title>
+        <link rel="stylesheet" type="text/css" href="list-selection.css">
+    </head>
+    <body>
+        <div>
+            <ul class="list">
+                <li>Test 1</li>
+                <li>Test 2</li>
+                <li>Test 3</li>
+                <li>Test 4</li>
+                <li>Test 5</li>
+            </ul>
 
+            <button class="reset">Reset</button>
+        </div>
 
-<div class="selection-view">
-</div>
-
-<ul class="list">
-    <li>Test 1</li>
-    <li>Test 2</li>
-    <li>Test 3</li>
-    <li>Test 4</li>
-    <li>Test 5</li>
-</ul>
-
-<button class="reset">Reset</button>
-<script src="../list-selection.js"></script>
-<script>
-    SimpleListItemSelector.init({
-        clickMode: SimpleListItemSelector.ClickModes.CLICK_TO_SELECT,
-        containerSelector: '.list',
-        childSelector: 'li',
-        resetSelector: '.reset',
-        selectedClassName: 'selected'
-    });
-</script>
-
-
-</body>
+        <script src="../dist/simple-list-item-selector.js"></script>
+        <script>
+            console.log(SimpleListItemSelector);
+            SimpleListItemSelector.init({
+                clickMode: SimpleListItemSelector.ClickModes.CLICK_TO_SELECT,
+                containerSelector: '.list',
+                childSelector: 'li',
+                resetSelector: '.reset',
+                selectedClassName: 'selected'
+            });
+        </script>
+    </body>
 </html>
