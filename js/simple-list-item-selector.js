@@ -5,14 +5,15 @@
     };
 
     let _clickMode;
-    let _allItemElems;
+    let _allItemElems = [];
     let _lastClickedIndexWithoutShift;
     let _newSelection = [];
-    let _selectedClassName;
     let _itemsSelector;
+    let _selectedClassName;
+    let _onSelectionChanged = () => {};
     let _debug = false;
 
-    function init({clickMode, containerSelector, childSelector, resetSelector, selectedClassName, debug}) {
+    function init({clickMode, containerSelector, childSelector, resetSelector, selectedClassName, onSelectionChanged, debug}) {
         if (isValidClickMode(clickMode)) {
             _clickMode = clickMode;
         } else {
@@ -20,9 +21,13 @@
         }
 
         if (selectedClassName) {
-            _selectedClassName = selectedClassName
+            _selectedClassName = selectedClassName;
+        }
+
+        if (onSelectionChanged && typeof onSelectionChanged === 'function') {
+            _onSelectionChanged = onSelectionChanged;
         } else {
-            throw Error('You need to specify a selectedClassName');
+            throw Error('You need to specify an _onSelectionChanged function callback');
         }
 
         let listElem = document.querySelector(containerSelector);
@@ -61,20 +66,31 @@
     }
 
     function updateDOM(selection) {
+        let selectedItems = [];
         let sortedSelection = selection.concat().sort();
 
         for (let item of _allItemElems) {
             let index = indexOfItem(item);
             if (sortedSelection.includes(index)) {
+                selectedItems.push(item);
                 if (!isItemSelected(item)) {
-                    item.classList.add(_selectedClassName);
+                    item.setAttribute('data-slis-selected', '1')
+                    if (_selectedClassName) {
+                        item.classList.add(_selectedClassName);
+                    }
                 }
             } else {
                 if (isItemSelected(item)) {
-                    item.classList.remove(_selectedClassName);
+                    //item.classList.remove(_selectedClassName);
+                    item.removeAttribute('data-slis-selected')
+                    if (_selectedClassName) {
+                        item.classList.remove(_selectedClassName);
+                    }
                 }
             }
         }
+
+        _onSelectionChanged(selectedItems);
     }
 
     function updateSelection(e, updateDOM) {
@@ -102,7 +118,7 @@
                 _newSelection.push(selectedItemIndex);
             }
         } else {
-            let firstSelectedItem = document.querySelector(_itemsSelector + "." + _selectedClassName);
+            let firstSelectedItem = document.querySelector(_itemsSelector + '[data-slis-selected="1"]');
             let firstSelectedItemIndex = indexOfItem(firstSelectedItem);
 
             if (_debug) {
@@ -182,7 +198,7 @@
     }
 
     function isItemSelected(item) {
-        return item.classList.contains(_selectedClassName)
+        return item.hasAttribute('data-slis-selected', '1');
     }
 
     function clearAllSelections() {

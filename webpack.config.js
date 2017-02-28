@@ -21,8 +21,6 @@ module.exports = {
     },
     // plugins: [
     //     new webpack.optimize.UglifyJsPlugin({
-    //         sourceMap: true,
-    //         compress: false
     //     })
     // ],
     devtool: 'source-map'
