@@ -115,6 +115,7 @@
             }
 
             function _updateSelection(e, updateDOM) {
+                let _newSelection = [];
                 let item = this;
                 let selectedItemIndex = _indexOfItem(item);
 
