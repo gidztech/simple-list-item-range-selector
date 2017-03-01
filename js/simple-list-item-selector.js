@@ -174,6 +174,13 @@
         }
     }
 
+    function unselectItemAtIndex(index) {
+        let item = _allItemElems[index];
+        if (item && isItemSelected(item)) {
+            _newSelection.splice(_newSelection.indexOf(index), 1);
+        }
+    }
+
     function unselectItemsWithinRange({start, end, mode}) {
         if (start < 0) return;
 
@@ -184,13 +191,6 @@
         } else if (mode === 'forward' && end > start) {
             for (let i = start; i <= end; i++) {
                 unselectItemAtIndex(i);
-            }
-        }
-
-        function unselectItemAtIndex(index) {
-            let item = _allItemElems[index];
-            if (item && isItemSelected(item)) {
-                _newSelection.splice(_newSelection.indexOf(index), 1);
             }
         }
     }
@@ -242,7 +242,7 @@
             unselectItemAtIndex(index);
         }
     }
-    
+
     let SimpleListItemSelector = {
         init,
         ClickModes: _ClickModes,
