@@ -229,9 +229,25 @@
         return isValid;
     }
 
+
+    function selectItem(item) {
+        if (item && !isItemSelected(item)) {
+            let index = indexOfItem(item);
+            _newSelection.push(index);
+        }
+    }
+    function unselectItem(item) {
+        if (item) {
+            let index = indexOfItem(item);
+            unselectItemAtIndex(index);
+        }
+    }
+    
     let SimpleListItemSelector = {
         init,
-        ClickModes: _ClickModes
+        ClickModes: _ClickModes,
+        selectItem,
+        unselectItem
     };
 
     module.exports = SimpleListItemSelector;
