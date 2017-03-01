@@ -275,11 +275,16 @@
                 }
             }
 
+            function _removeItem(item) {
+                _clearAllSelectionsHandler();
+            }
+
             let instance = {
                 id,
                 init: _init,
                 selectItem: _selectItem,
                 unselectItem: _unselectItem,
+                removeItem: _removeItem,
                 unregisterEvents: _unregisterEvents
             };
 
