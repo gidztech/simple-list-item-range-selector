@@ -13,7 +13,7 @@
     let _onSelectionChanged = () => {};
     let _debug = false;
 
-    function init({clickMode, containerSelector, childSelector, resetSelector, selectedClassName, onSelectionChanged, debug}) {
+    function init({clickMode, containerNode, childSelector, resetSelector, selectedClassName, onSelectionChanged, debug}) {
         if (isValidClickMode(clickMode)) {
             _clickMode = clickMode;
         } else {
@@ -30,20 +30,18 @@
             throw Error('You need to specify an _onSelectionChanged function callback');
         }
 
-        let listElem = document.querySelector(containerSelector);
-
-        if (!listElem) {
-            throw Error('You need to specify a valid conainerSelector');
+        if (!containerNode) {
+            throw Error('You need to specify a valid containerNode');
         }
 
-        _itemsSelector = containerSelector + " " + childSelector;
-        _allItemElems = document.querySelectorAll(_itemsSelector);
+        _itemsSelector = childSelector;
+        _allItemElems = containerNode.querySelectorAll(_itemsSelector);
 
         if (!_allItemElems) {
             throw Error('Items were not found using ' + _itemsSelector + ' selector.');
         }
 
-        listElem.addEventListener('selectstart', (e) => {
+        containerNode.addEventListener('selectstart', (e) => {
             // disable selecting text
             e.preventDefault();
             return false;
