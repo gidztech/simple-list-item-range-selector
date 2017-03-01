@@ -21,8 +21,9 @@
         <script>
             var containerNode = document.querySelector('.list');
 
-            SimpleListItemSelector.init({
-                clickMode: SimpleListItemSelector.ClickModes.CLICK_TO_SELECT,
+            var instance = SimpleListItemSelector.createInstance('my_id');
+            instance.init({
+                clickMode: SimpleListItemSelector.clickModes.CLICK_TO_SELECT,
                 containerNode,
                 childSelector: 'li',
                 resetSelector: '.reset',
