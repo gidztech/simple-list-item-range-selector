@@ -9,7 +9,7 @@
     let SimpleListItemSelector = {
         createInstance(id) {
             let _clickMode;
-            let _allItemElems = [];
+            let _allItemElements = [];
             let _lastClickedIndexWithoutShift;
             let _newSelection = [];
             let _containerNode;
@@ -19,7 +19,15 @@
             let _onSelectionChanged = () => {};
             let _debug = false;
 
-            function _init({clickMode, containerNode, childSelector, resetSelector, selectedClassName, onSelectionChanged, debug}) {
+            function _init({
+                clickMode,
+                containerNode,
+                childSelector,
+                resetSelector,
+                selectedClassName,
+                onSelectionChanged,
+                debug}) {
+
                 if (containerNode) {
                     _containerNode = containerNode;
 
@@ -30,9 +38,11 @@
                         console.warn('No childSelector was specified. Defaulted to "li"');
                     }
 
-                    _allItemElems = containerNode.querySelectorAll(_itemsSelector);
+                    _allItemElements = containerNode.querySelectorAll(_itemsSelector);
 
-                    if (_allItemElems) {
+                    if (_allItemElements) {
+                        _resetDOM();
+
                         if (_isValidClickMode(clickMode)) {
                             _clickMode = clickMode;
                         } else {
@@ -66,7 +76,7 @@
 
                 _containerNode.addEventListener('selectstart', (e) => _preventDefaultHandler);
 
-                [..._allItemElems].forEach((elem, index) => {
+                [..._allItemElements].forEach((elem, index) => {
                     elem.setAttribute('data-slis-index', index.toString());
                     elem.addEventListener('click', _clickElementHandler);
                 });
@@ -81,7 +91,7 @@
                 _containerNode.removeEventListener('selectstart', _preventDefaultHandler);
 
                 let i = 0;
-                [..._allItemElems].forEach((elem, index) => {
+                [..._allItemElements].forEach((elem, index) => {
                     elem.removeEventListener('click', _clickElementHandler);
                 });
             }
@@ -90,7 +100,7 @@
                 let selectedItems = [];
                 let sortedSelection = selection.concat().sort();
 
-                for (let item of _allItemElems) {
+                for (let item of _allItemElements) {
                     let index = _indexOfItem(item);
                     if (sortedSelection.includes(index)) {
                         selectedItems.push(item);
@@ -115,7 +125,6 @@
             }
 
             function _updateSelection(e, updateDOM) {
-                let _newSelection = [];
                 let item = this;
                 let selectedItemIndex = _indexOfItem(item);
 
@@ -149,13 +158,13 @@
 
                     if (firstSelectedItemIndex === selectedItemIndex) {
                         // multiple items are selected currently and user wants to reduce range to just the selected item
-                        _unselectItemsWithinRange({start: selectedItemIndex + 1, end: _allItemElems.length, mode: 'forward'});
+                        _unselectItemsWithinRange({start: selectedItemIndex + 1, end: _allItemElements.length, mode: 'forward'});
                     } else if (firstSelectedItemIndex < selectedItemIndex) {
                         if (selectedItemIndex > _lastClickedIndexWithoutShift) {
                             // user wants to add the next items up until selected item to complete a forward range
                             _selectItemsWithinRange({start: _lastClickedIndexWithoutShift + 1, end: selectedItemIndex});
                             // the user may be reducing the range as a result, so clear selection after the current selected item
-                            _unselectItemsWithinRange({start: selectedItemIndex + 1, end: _allItemElems.length, mode: 'forward'});
+                            _unselectItemsWithinRange({start: selectedItemIndex + 1, end: _allItemElements.length, mode: 'forward'});
                             // if a previous selection is before the last clicked index without a shift, we need to clear it
                             _unselectItemsWithinRange({start: _lastClickedIndexWithoutShift - 1, end: 0, mode: 'reverse'});
                         } else {
@@ -167,7 +176,7 @@
                             // clear items after the last clicked index without shift
                             _unselectItemsWithinRange({
                                 start: _lastClickedIndexWithoutShift + 1,
-                                end: _allItemElems.length,
+                                end: _allItemElements.length,
                                 mode: 'forward'
                             });
                         }
@@ -177,7 +186,7 @@
                         // clear items after the last clicked index without shift
                         _unselectItemsWithinRange({
                             start: _lastClickedIndexWithoutShift + 1,
-                            end: _allItemElems.length,
+                            end: _allItemElements.length,
                             mode: 'forward'
                         });
                     }
@@ -190,7 +199,7 @@
                 if (start < 0 || end < start) return;
 
                 for (let i = start; i <= end; i++) {
-                    let item = _allItemElems[i];
+                    let item = _allItemElements[i];
                     if (item && !_isItemSelected(item)) {
                         let index = _indexOfItem(item);
                         _newSelection.push(index);
@@ -199,7 +208,7 @@
             }
 
             function _unselectItemAtIndex(index) {
-                let item = _allItemElems[index];
+                let item = _allItemElements[index];
                 if (item && _isItemSelected(item)) {
                     _newSelection.splice(_newSelection.indexOf(index), 1);
                 }
@@ -276,8 +285,24 @@
                 }
             }
 
-            function _removeItem(item) {
-                _clearAllSelectionsHandler();
+            function _resetDOM() {
+                for (let item of _allItemElements) {
+                    item.removeAttribute('data-slis-index');
+                    item.removeAttribute('data-slis-selected');
+                }
+            }
+
+            function _reset() {
+                _init({
+                        clickMode: _clickMode,
+                        containerNode: _containerNode,
+                        itemsSelector: _itemsSelector,
+                        resetSelector: _resetSelector,
+                        selectedClassName: _selectedClassName,
+                        onSelectionChanged: _onSelectionChanged,
+                        debug: _debug
+                    }
+                );
             }
 
             let instance = {
@@ -285,7 +310,7 @@
                 init: _init,
                 selectItem: _selectItem,
                 unselectItem: _unselectItem,
-                removeItem: _removeItem,
+                reset: _reset,
                 unregisterEvents: _unregisterEvents
             };
 
@@ -314,4 +339,3 @@
     module.exports = SimpleListItemSelector;
 
 })();
-
