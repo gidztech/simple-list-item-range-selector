@@ -105,15 +105,14 @@
                     if (sortedSelection.includes(index)) {
                         selectedItems.push(item);
                         if (!_isItemSelected(item)) {
-                            item.setAttribute('data-slis-selected', '1')
+                            item.setAttribute('data-slis-selected', '1');
                             if (_selectedClassName) {
                                 item.classList.add(_selectedClassName);
                             }
                         }
                     } else {
                         if (_isItemSelected(item)) {
-                            //item.classList.remove(_selectedClassName);
-                            item.removeAttribute('data-slis-selected')
+                            item.removeAttribute('data-slis-selected');
                             if (_selectedClassName) {
                                 item.classList.remove(_selectedClassName);
                             }
@@ -289,6 +288,11 @@
                 for (let item of _allItemElements) {
                     item.removeAttribute('data-slis-index');
                     item.removeAttribute('data-slis-selected');
+
+                    if (_selectedClassName) {
+                        item.classList.remove(_selectedClassName);
+                    }
+
                 }
             }
 
