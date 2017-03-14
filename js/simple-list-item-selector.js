@@ -309,13 +309,18 @@
                 );
             }
 
+            function _updateForNewItems() {
+                console.log("Going to do update for new items");
+            }
+
             let instance = {
                 id,
                 init: _init,
                 selectItem: _selectItem,
                 unselectItem: _unselectItem,
                 reset: _reset,
-                unregisterEvents: _unregisterEvents
+                unregisterEvents: _unregisterEvents,
+                updateForNewItems: _updateForNewItems
             };
 
             _instances.push(instance);
