@@ -1,14 +1,13 @@
-var path = require('path');
-var webpack = require('webpack');
-var HtmlWebpackPlugin = require('html-webpack-plugin');
+const path = require('path');
+const webpack = require('webpack');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 module.exports = {
     devtool: 'cheap-eval-source-map',
     entry: [
         'webpack-dev-server/client?http://localhost:8080',
         'webpack/hot/only-dev-server',
-        './example/index',
-        './src/js/simple-list-item-selector',
+        './dev/main'
     ],
     output: {
         path: path.join(__dirname, 'dist'),
@@ -18,14 +17,15 @@ module.exports = {
     },
     plugins: [
         new webpack.HotModuleReplacementPlugin(),
-        new HtmlWebpackPlugin({
-            template: './example/index.html'
-        })
+        new HtmlWebpackPlugin({title: 'Simple List Item Selector'})
     ],
     module: {
         loaders: [{
             test: /\.html$/,
             loader: "raw-loader"
+        },{
+            test: /\.css/,
+            use: ['style-loader', 'css-loader']
         }, {
             exclude: /node_modules/,
             test: /\.js$/,
@@ -35,7 +35,6 @@ module.exports = {
     },
     devServer: {
         contentBase: path.join(__dirname, "dist"),
-        //publicPath: path.join(__dirname, "dist")
         hot: true
     }
 }
