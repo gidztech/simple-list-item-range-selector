@@ -19,8 +19,7 @@ module.exports = {
     plugins: [
         new webpack.HotModuleReplacementPlugin(),
         new HtmlWebpackPlugin({
-            template: './example/index.html',
-            inject: 'body',
+            template: './example/index.html'
         })
     ],
     module: {
