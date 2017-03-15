@@ -1,11 +1,11 @@
 let _instances = [];
 
-let _clickModes = {
+const _clickModes = {
     CTRL_CLICK_TO_SELECT: 0,
     CLICK_TO_SELECT: 1
 };
 
-let SimpleListItemSelector = {
+let SimpleListItemRangeSelector = {
     createInstance(id) {
         let _clickMode;
         let _allItemElements = [];
@@ -47,7 +47,7 @@ let SimpleListItemSelector = {
                     if (_isValidClickMode(clickMode)) {
                         _clickMode = clickMode;
                     } else {
-                        _clickMode = SimpleListItemSelector.clickModes.CTRL_CLICK_TO_SELECT;
+                        _clickMode = SimpleListItemRangeSelector.clickModes.CTRL_CLICK_TO_SELECT;
                         console.warn('Invalid clickMode was specified. Defaulted to "CTRL_CLICK_TO_SELECT"');
                     }
 
@@ -78,7 +78,7 @@ let SimpleListItemSelector = {
             _containerNode.addEventListener('selectstart', (e) => _preventDefaultHandler);
 
             [..._allItemElements].forEach((elem, index) => {
-                elem.setAttribute('data-slis-index', index.toString());
+                elem.setAttribute('data-slirs-index', index.toString());
                 elem.addEventListener('click', _clickElementHandler);
             });
         }
@@ -106,14 +106,14 @@ let SimpleListItemSelector = {
                 if (sortedSelection.includes(index)) {
                     selectedItems.push(item);
                     if (!_isItemSelected(item)) {
-                        item.setAttribute('data-slis-selected', '1');
+                        item.setAttribute('data-slirs-selected', '1');
                         if (_selectedClassName) {
                             item.classList.add(_selectedClassName);
                         }
                     }
                 } else {
                     if (_isItemSelected(item)) {
-                        item.removeAttribute('data-slis-selected');
+                        item.removeAttribute('data-slirs-selected');
                         if (_selectedClassName) {
                             item.classList.remove(_selectedClassName);
                         }
@@ -149,7 +149,7 @@ let SimpleListItemSelector = {
                     _newSelection.push(selectedItemIndex);
                 }
             } else {
-                let firstSelectedItem = document.querySelector(_itemsSelector + '[data-slis-selected="1"]');
+                let firstSelectedItem = document.querySelector(_itemsSelector + '[data-slirs-selected="1"]');
                 let firstSelectedItemIndex = _indexOfItem(firstSelectedItem);
 
                 if (_debug) {
@@ -237,7 +237,7 @@ let SimpleListItemSelector = {
         }
 
         function _isItemSelected(item) {
-            return item.hasAttribute('data-slis-selected', '1');
+            return item.hasAttribute('data-slirs-selected', '1');
         }
 
         function _clearAllSelectionsHandler() {
@@ -256,7 +256,7 @@ let SimpleListItemSelector = {
 
         function _indexOfItem(item) {
             try {
-                return parseInt(item.getAttribute('data-slis-index'));
+                return parseInt(item.getAttribute('data-slirs-index'));
             }
             catch (e) {
                 throw Error('Index doesn\'t exist. Something went dreadfully wrong.');
@@ -299,8 +299,8 @@ let SimpleListItemSelector = {
 
         function _resetDOM() {
             for (let item of _allItemElements) {
-                item.removeAttribute('data-slis-index');
-                item.removeAttribute('data-slis-selected');
+                item.removeAttribute('data-slirs-index');
+                item.removeAttribute('data-slirs-selected');
 
                 if (_selectedClassName) {
                     item.classList.remove(_selectedClassName);
@@ -333,7 +333,7 @@ let SimpleListItemSelector = {
                 _allItemElements = _containerNode.querySelectorAll(_itemsSelector);
 
                 [..._allItemElements].forEach((elem, index) => {
-                    elem.setAttribute('data-slis-index', index.toString());
+                    elem.setAttribute('data-slirs-index', index.toString());
                     elem.addEventListener('click', _clickElementHandler);
                 });
             }
@@ -371,5 +371,5 @@ let SimpleListItemSelector = {
     clickModes: _clickModes
 };
 
-module.exports = SimpleListItemSelector;
+module.exports = SimpleListItemRangeSelector;
 

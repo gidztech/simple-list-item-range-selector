@@ -1,7 +1,7 @@
 {
-  "name": "simple-list-item-selector",
+  "name": "simple-list-item-range-selector",
   "version": "1.0.0",
-  "description": "Allows you to turn items in a list into selections",
+  "description": "Converts a list of items into a selectable list, supporting range selection",
   "main": "bundle.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
@@ -10,7 +10,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/gidztech/simple-list-selection-range.git"
+    "url": "https://github.com/gidztech/simple-list-item-range-selector"
   },
   "author": "",
   "license": "MIT",

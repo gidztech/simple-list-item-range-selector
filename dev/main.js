@@ -1,4 +1,4 @@
-import SimpleListItemSelector from '../src/js/simple-list-item-selector';
+import SimpleListItemRangeSelector from '../src/js/simple-list-item-range-selector';
 import html from './ui.html';
 import './styles.css';
 
@@ -9,7 +9,7 @@ document.body.onload = function () {
     let containerNode = document.querySelector('.list');
     let resetNode = document.querySelector('.reset');
     let addMoreItems = document.querySelector('#addMoreItems');
-    let instance = SimpleListItemSelector.createInstance('my_id');
+    let instance = SimpleListItemRangeSelector.createInstance('my_id');
 
     addMoreItems.addEventListener('click', () => {
         addItems();
@@ -27,7 +27,7 @@ document.body.onload = function () {
         addItems();
 
         instance.init({
-            clickMode: SimpleListItemSelector.clickModes.CLICK_TO_SELECT,
+            clickMode: SimpleListItemRangeSelector.clickModes.CLICK_TO_SELECT,
             containerNode,
             childSelector: 'li',
             resetSelector: '.reset',

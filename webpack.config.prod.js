@@ -3,12 +3,12 @@ const webpack = require('webpack');
 
 module.exports = {
     devtool: 'source-map',
-    entry: ['./src/js/simple-list-item-selector'],
+    entry: ['./src/js/simple-list-item-range-selector'],
     output: {
         path: path.join(__dirname, 'dist'),
-        filename: 'simple-list-item-selector.js',
+        filename: 'simple-list-item-range-selector.js',
         libraryTarget: 'umd',
-        library: 'SimpleListItemSelector'
+        library: 'SimpleListItemRangeSelector'
     },
     plugins: [
         new webpack.optimize.UglifyJsPlugin({

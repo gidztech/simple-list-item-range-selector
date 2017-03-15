@@ -13,11 +13,11 @@ module.exports = {
         path: path.join(__dirname, 'dist'),
         filename: 'bundle.js',
         libraryTarget: 'umd',
-        library: 'SimpleListItemSelector'
+        library: 'SimpleListItemRangeSelector'
     },
     plugins: [
         new webpack.HotModuleReplacementPlugin(),
-        new HtmlWebpackPlugin({title: 'Simple List Item Selector'})
+        new HtmlWebpackPlugin({title: 'Simple List Item Range Selector'})
     ],
     module: {
         loaders: [{
