@@ -3,7 +3,26 @@
     <head>
         <meta charset="UTF-8">
         <title>Simple List Item Selector</title>
-        <link rel="stylesheet" type="text/css" href="list-selection.css">
+
+        <style type="text/css">
+            ul {
+                padding: 0;
+                list-style-type: none;
+                cursor: default;
+            }
+
+            ul li {
+                background: lightblue;
+                width: 200px;
+                padding: 5px;
+                margin-bottom: 1px;
+            }
+
+            ul li.selected {
+                background: LightCoral;
+            }
+
+        </style>
     </head>
     <body>
         <div>
@@ -16,12 +35,13 @@
             </ul>
 
             <button class="reset">Reset</button>
+            <button id="addMoreItems">Add more items</button>
         </div>
-        <script src="../dist/simple-list-item-selector.js"></script>
+        <script src="bundle.js"></script>
         <script>
-            var containerNode = document.querySelector('.list');
+            let containerNode = document.querySelector('.list');
 
-            var instance = SimpleListItemSelector.createInstance('my_id');
+            let instance = SimpleListItemSelector.createInstance('my_id');
             instance.init({
                 clickMode: SimpleListItemSelector.clickModes.CLICK_TO_SELECT,
                 containerNode,
@@ -32,6 +52,13 @@
                     console.log("Updated selection", selection);
                 }
             });
+
+            let addMoreItems = document.querySelector('#addMoreItems');
+            addMoreItems.addEventListener('click', () => {
+
+            });
+
+
         </script>
     </body>
 </html>
