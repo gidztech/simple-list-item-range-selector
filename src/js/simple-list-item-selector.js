@@ -284,6 +284,8 @@ let SimpleListItemSelector = {
                 let index = _indexOfItem(item);
                 _newSelection.push(index);
             }
+
+            _updateDOM(_newSelection);
         }
 
         function _unselectItem(item) {
@@ -291,6 +293,8 @@ let SimpleListItemSelector = {
                 let index = _indexOfItem(item);
                 _unselectItemAtIndex(index);
             }
+
+            _updateDOM(_newSelection);
         }
 
         function _resetDOM() {
