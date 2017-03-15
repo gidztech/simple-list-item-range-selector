@@ -319,7 +319,18 @@ let SimpleListItemSelector = {
         }
 
         function _updateForNewItems() {
-            console.log("Going to do update for new items");
+            if (_debug) {
+                console.log("Going to do update for new items");
+            }
+
+            if (_containerNode) {
+                _allItemElements = _containerNode.querySelectorAll(_itemsSelector);
+
+                [..._allItemElements].forEach((elem, index) => {
+                    elem.setAttribute('data-slis-index', index.toString());
+                    elem.addEventListener('click', _clickElementHandler);
+                });
+            }
         }
 
         let instance = {
@@ -340,7 +351,7 @@ let SimpleListItemSelector = {
         return _instances.find((instance) => instance.id === id);
     },
     removeInstance(id) {
-        let instance = SimpleListItemSelector.getInstance(id);
+        let instance = getInstance(id);
 
         if (instance) {
             instance.unregisterEvents();
