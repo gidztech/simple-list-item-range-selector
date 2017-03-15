@@ -318,10 +318,12 @@ let SimpleListItemSelector = {
             );
         }
 
-        function _updateForNewItems() {
+        function _updateForNewItems(containerNode) {
             if (_debug) {
                 console.log("Going to do update for new items");
             }
+
+            _containerNode = containerNode;
 
             if (_containerNode) {
                 _allItemElements = _containerNode.querySelectorAll(_itemsSelector);
@@ -351,7 +353,7 @@ let SimpleListItemSelector = {
         return _instances.find((instance) => instance.id === id);
     },
     removeInstance(id) {
-        let instance = getInstance(id);
+        let instance = this.getInstance(id);
 
         if (instance) {
             instance.unregisterEvents();

@@ -45,7 +45,7 @@ document.body.onload = function () {
             containerNode.appendChild(li);
         }
 
-        instance.updateForNewItems();
+        instance.updateForNewItems(containerNode);
     }
 
     init();
