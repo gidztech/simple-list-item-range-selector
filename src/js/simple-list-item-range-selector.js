@@ -135,7 +135,7 @@ let SimpleListItemRangeSelector = {
             let item = this;
             let selectedItemIndex = _indexOfItem(item);
 
-            if (!_rangeSelectionEnabled && !e.shiftKey) {
+            if (!e.shiftKey || !_rangeSelectionEnabled) {
                 _lastClickedIndexWithoutShift = selectedItemIndex;
 
                 if (_isItemSelected(item)) {
