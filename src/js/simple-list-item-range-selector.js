@@ -10,6 +10,7 @@ let SimpleListItemRangeSelector = {
         let _clickMode;
         let _allItemElements = [];
         let _lastClickedIndexWithoutShift;
+        let _rangeSelectionEnabled = true;
         let _newSelection = [];
         let _containerNode;
         let _itemsSelector;
@@ -26,6 +27,7 @@ let SimpleListItemRangeSelector = {
             resetSelector,
             selectedClassName,
             onSelectionChanged,
+            rangeSelectionEnabled = true,
             debug
         }) {
 
@@ -59,7 +61,7 @@ let SimpleListItemRangeSelector = {
                     _resetSelector = resetSelector;
                     _debug = debug;
 
-                    _registerEvents();
+                    _registerEvents({resetEvent: resetSelector, rangeEvent: rangeSelectionEnabled});
 
                 } else {
                     throw Error('Items were not found using ' + _itemsSelector + ' selector.');
@@ -69,13 +71,16 @@ let SimpleListItemRangeSelector = {
             }
         }
 
-        function _registerEvents() {
-            if (_resetSelector) {
+        function _registerEvents({ resetEvent = false, rangeEvent = true } = {}) {
+            if (resetEvent && _resetSelector) {
                 let resetElem = document.querySelector(_resetSelector);
                 resetElem.addEventListener('click', _clearAllSelectionsHandler);
             }
 
-            _containerNode.addEventListener('selectstart', (e) => _preventDefaultHandler);
+            if (rangeEvent) {
+                _rangeSelectionEnabled = true;
+                _containerNode.addEventListener('selectstart', (e) => _preventDefaultHandler);
+            }
 
             [..._allItemElements].forEach((elem, index) => {
                 elem.setAttribute('data-slirs-index', index.toString());
@@ -83,15 +88,17 @@ let SimpleListItemRangeSelector = {
             });
         }
 
-        function _unregisterEvents() {
-            if (_resetSelector) {
+        function _unregisterEvents({ resetEvent = false, rangeEvent = true } = {}) {
+            if (resetEvent && _resetSelector) {
                 let resetElem = document.querySelector(_resetSelector);
                 resetElem.removeEventListener('click', _clearAllSelectionsHandler);
             }
 
-            _containerNode.removeEventListener('selectstart', _preventDefaultHandler);
+            if (rangeEvent) {
+                _rangeSelectionEnabled = false;
+                _containerNode.removeEventListener('selectstart', _preventDefaultHandler);
+            }
 
-            let i = 0;
             [..._allItemElements].forEach((elem, index) => {
                 elem.removeEventListener('click', _clickElementHandler);
             });
@@ -128,7 +135,7 @@ let SimpleListItemRangeSelector = {
             let item = this;
             let selectedItemIndex = _indexOfItem(item);
 
-            if (!e.shiftKey) {
+            if (!_rangeSelectionEnabled && !e.shiftKey) {
                 _lastClickedIndexWithoutShift = selectedItemIndex;
 
                 if (_isItemSelected(item)) {
@@ -297,6 +304,10 @@ let SimpleListItemRangeSelector = {
             _updateDOM(_newSelection);
         }
 
+        function _disableRangeSelection() {
+            _unregisterEvents({rangeEvent: true});
+        }
+
         function _resetDOM() {
             for (let item of _allItemElements) {
                 item.removeAttribute('data-slirs-index');
@@ -344,6 +355,7 @@ let SimpleListItemRangeSelector = {
             init: _init,
             selectItem: _selectItem,
             unselectItem: _unselectItem,
+            disableRangeSelection: _disableRangeSelection,
             reset: _reset,
             unregisterEvents: _unregisterEvents,
             updateForNewItems: _updateForNewItems
