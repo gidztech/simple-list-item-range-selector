@@ -1,8 +1,8 @@
 {
   "name": "simple-list-item-range-selector",
   "version": "1.0.0",
-  "description": "Converts a list of items into a selectable list, supporting range selection",
-  "main": "bundle.js",
+  "description": "Small UI library that allows you to take a list of items and attach selection events to it",
+  "main": "simple-list-item-range-selector.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "webpack --config webpack.config.prod.js",
@@ -12,8 +12,12 @@
     "type": "git",
     "url": "https://github.com/gidztech/simple-list-item-range-selector"
   },
-  "author": "",
+  "author": "Gideon Pyzer",
   "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/gidztech/simple-list-item-range-selector/issues"
+  },
+  "homepage": "https://github.com/gidztech/simple-list-item-range-selector#readme",
   "devDependencies": {
     "babel-core": "^6.23.1",
     "babel-loader": "^6.3.2",
