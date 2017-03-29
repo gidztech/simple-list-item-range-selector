@@ -376,6 +376,7 @@ let SimpleListItemRangeSelector = {
 
         if (instance) {
             instance.unregisterEvents();
+            instance._resetDOM();
             let indexToRemove = _instances.indexOf(instance);
             _instances.splice(indexToRemove, 1);
         } else {
