@@ -307,7 +307,7 @@ let SimpleListItemRangeSelector = {
         }
 
         function _disableRangeSelection() {
-            _unregisterEvents({rangeEvent: true});
+            _unregisterEvents({rangeEvent: true, clickEvent: false});
         }
 
         function _resetDOM() {
