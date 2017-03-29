@@ -18,26 +18,21 @@ This is a small library that allows you to take a list of items and apply select
 ## Usage
 ### API
 #### SimpleListItemRangeSelector
-- `createInstance`
+- `createInstance (id: string): {}`
   * Description: Takes a unique identifer for the instance, allowing you to isolate multiple instances of the library.
-  * Parameters: `Id: String`
-  * Return: `instance: {}`
-- `getInstance`
+- `getInstance (id: string): {}`
   * Description: Gets an existing instance of the library, given the Id as a parameter.
-  * Parameters: `Id: String`
-  * Return: `instance: {}`
-- `removeInstance`
+- `removeInstance (id: string)`
   * Description: Removes an existing instance of the library, given the Id as a parameter.
-  * Parameters: `Id: String`
   * Throws: 'Instance cannot be found at Id {Id}' if no instance is found.
 - `clickModes`
   * `CTRL_CLICK_TO_SELECT` - This mode requires the user to hold the `CTRL` modifer key, while left-clicking on items to make selections. If you click the same item again while the modifier key is held, the item will be unselected. Clicking on another item without the modifer key will select the new item and unselect all others.
    * `CLICK_TO_SELECT` - This mode simply allows the user to click on an item to select and unselect it
 
 ### Instance
-- `init`
+- `init (options: {})`
  * Description: Initialises the current instance of the library, binding events to the DOM
- * Parameters: `options: {}`
+ * Options:
    - `clickMode: ClickModes` - Click mode from: `CTRL_CLICK_TO_SELECT`, `CLICK_TO_SELECT` **[Required]**
    - `containerNode: Element`- A DOM node, e.g. `document.querySelector('.list')` **[Required]**
    - `childSelector: String` - A child selector, e.g. `li`. Defaults to `li` **[Optional]**
@@ -46,13 +41,20 @@ This is a small library that allows you to take a list of items and apply select
    - `onSelectionChanged: Event` - A custom event handler that will execute when the selection has changed **[Optional]**
    - `debug: int` - A debug flag, 0 or 1 **[Optional]**
  * Throws: Various errors for missing or invalid options
-- `selectItem`
-  * Description: Selects an item programmatically
-  * Parameters: `item: Element`
-- `unselectItem`
+- `selectItem (item: Element)`
+  * Description: Select a single item programmatically
+- `unselectItem (item: Element)`
+  * Description: Unselect a single item programmatically
 - `disableRangeSelection`
+  * Description: Disables the range selection mode, i.e. usage of the `SHIFT` modifier key
 - `reset`
-- `unregisterEvents`
+  * Description: Resets the DOM for the items and re-initialises with the same configuration
+- `unregisterEvents (options: {})`
+  * Description: Unregisters certain or all the event handlers that were previously set up by this library
+  * Options:
+    - `resetEvent: boolean` - Reset click event for reset selector. Defaults to false
+    - `rangeEvent: boolean` - Range selection event. Defaults to true
+    - `clickEvent: boolean` - Click event for list items. Defaults to true
 - `updateForNewItems`
 
 ### ES2015 Module
