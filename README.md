@@ -23,11 +23,11 @@ This is a small library that allows you to take a list of items and apply select
   * Parameters: `Id: String`
   * Return: `instance: {}`
 - `getInstance`
-  * Description: Gets an existing initialised instance of the library, given the Id as a parameter.
+  * Description: Gets an existing instance of the library, given the Id as a parameter.
   * Parameters: `Id: String`
   * Return: `instance: {}`
 - `removeInstance`
-  * Description: Removes an existing initialised instance of the library, given the Id as a parameter.
+  * Description: Removes an existing instance of the library, given the Id as a parameter.
   * Parameters: `Id: String`
   * Throws: 'Instance cannot be found at Id {Id}' if no instance is found.
 - `clickModes`
@@ -36,7 +36,19 @@ This is a small library that allows you to take a list of items and apply select
 
 ### Instance
 - `init`
+ * Description: Initialises the current instance of the library, binding events to the DOM
+ * Parameters: `options: {}`
+   - `clickMode: ClickModes` - Click mode from: `CTRL_CLICK_TO_SELECT`, `CLICK_TO_SELECT` **[Required]**
+   - `containerNode: Element`- A DOM node, e.g. `document.querySelector('.list')` **[Required]**
+   - `childSelector: String` - A child selector, e.g. `li`. Defaults to `li` **[Optional]**
+   - `resetSelector: String` - A reset selector for clearing the selection, e.g. `#reset` **[Optional]**
+   - `selectedClassName: String` - A class name to be applied for selected items, e.g. `selected` **[Optional]**
+   - `onSelectionChanged: Event` - A custom event handler that will execute when the selection has changed **[Optional]**
+   - `debug: int` - A debug flag, 0 or 1 **[Optional]**
+ * Throws: Various errors for missing or invalid options
 - `selectItem`
+  * Description: Selects an item programmatically
+  * Parameters: `item: Element`
 - `unselectItem`
 - `disableRangeSelection`
 - `reset`
