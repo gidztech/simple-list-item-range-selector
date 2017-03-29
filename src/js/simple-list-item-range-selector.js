@@ -324,10 +324,11 @@ let SimpleListItemRangeSelector = {
             _init({
                     clickMode: _clickMode,
                     containerNode: _containerNode,
-                    itemsSelector: _itemsSelector,
+                    childSelector: _itemsSelector,
                     resetSelector: _resetSelector,
                     selectedClassName: _selectedClassName,
                     onSelectionChanged: _onSelectionChanged,
+                    rangeSelectionEnabled: _rangeSelectionEnabled,
                     debug: _debug
                 }
             );
