@@ -91,3 +91,5 @@ onPageReceived.subscribe(() => {
     }, 100);
 });
 ```
+## Contribute
+Check out the [Contributing.md](https://github.com/gidztech/simple-list-item-range-selector/blob/master/CONTRIBUTING.md) file.
