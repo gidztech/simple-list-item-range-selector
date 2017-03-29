@@ -88,7 +88,7 @@ let SimpleListItemRangeSelector = {
             });
         }
 
-        function _unregisterEvents({ resetEvent = false, rangeEvent = true } = {}) {
+        function _unregisterEvents({ resetEvent = false, rangeEvent = true, clickEvent = true } = {}) {
             if (resetEvent && _resetSelector) {
                 let resetElem = document.querySelector(_resetSelector);
                 resetElem.removeEventListener('click', _clearAllSelectionsHandler);
@@ -99,9 +99,11 @@ let SimpleListItemRangeSelector = {
                 _containerNode.removeEventListener('selectstart', _preventDefaultHandler);
             }
 
-            [..._allItemElements].forEach((elem, index) => {
-                elem.removeEventListener('click', _clickElementHandler);
-            });
+            if (clickEvent) {
+                [..._allItemElements].forEach(elem => {
+                    elem.removeEventListener('click', _clickElementHandler);
+                });
+            }
         }
 
         function _updateDOM(selection) {
