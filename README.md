@@ -68,9 +68,8 @@ let SimpleListItemRangeSelector = require('simple-list-item-range-selector')
 ```
 ### Example
 ```javascript
-let instanceId = 'ebec9955-2102-4c5a-a554-e7f9da80af59';
-let instance = SimpleListItemRangeSelector.createInstance(instanceId);
-instance.init({
+let instance = SimpleListItemRangeSelector.createInstance('ebec9955-2102-4c5a-a554-e7f9da80af59'); // anything unique
+let options = {
     clickMode: SimpleListItemRangeSelector.clickModes.CTRL_CLICK_TO_SELECT,
     containerNode: document.querySelector('.list'),
     childSelector: 'li',
@@ -78,7 +77,8 @@ instance.init({
     onSelectionChanged (selectedNodes) {
         // custom logic here
     }
-});
+};
+instance.init(options);
 ```
 
 ### More
