@@ -27,7 +27,7 @@ document.body.onload = function () {
         addItems();
 
         instance.init({
-            clickMode: SimpleListItemRangeSelector.clickModes.CLICK_TO_SELECT,
+            clickMode: SimpleListItemRangeSelector.clickModes.CTRL_CLICK_TO_SELECT,
             containerNode,
             childSelector: 'li',
             resetSelector: '.reset',
