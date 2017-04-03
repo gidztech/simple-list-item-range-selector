@@ -1,10 +1,10 @@
-let path = require('path');
+var path = require('path');
 
-let showReport = false;
-let filterTest = false;
-let debugMode = false;
-let remoteDebug = false;
-let dashboard = false;
+var showReport = false;
+var filterTest = false;
+var debugMode = false;
+var remoteDebug = false;
+var dashboard = false;
 
 process.argv.forEach(function(arg, i){
     if (arg === 'report'){
@@ -25,7 +25,7 @@ process.argv.forEach(function(arg, i){
 });
 
 
-let flow = require('phantomflow').init({
+var flow = require('phantomflow').init({
     debug: debugMode ? 2 : undefined,
     createReport: true,
     test: filterTest,
