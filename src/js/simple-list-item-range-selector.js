@@ -1,3 +1,5 @@
+import 'babel-polyfill';
+
 let _instances = [];
 
 const _clickModes = {

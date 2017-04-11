@@ -1,12 +1,12 @@
-var path = require('path');
+const server = require('./server.js');
 
-var showReport = false;
-var filterTest = false;
-var debugMode = false;
-var remoteDebug = false;
-var dashboard = false;
+let showReport = false;
+let filterTest = false;
+let debugMode = false;
+let remoteDebug = false;
+let dashboard = false;
 
-process.argv.forEach(function(arg, i){
+process.argv.forEach((arg, i) => {
     if (arg === 'report'){
         showReport = true;
     }
@@ -25,7 +25,7 @@ process.argv.forEach(function(arg, i){
 });
 
 
-var flow = require('phantomflow').init({
+let flow = require('phantomflow').init({
     debug: debugMode ? 2 : undefined,
     createReport: true,
     test: filterTest,
@@ -36,10 +36,11 @@ var flow = require('phantomflow').init({
 
 if (showReport){
     flow.report();
-
 } else {
-    flow.run(function(code) {
-        process.exit(code);
+    let serverInstance = server.start(() => {
+        flow.run(function(code) {
+            server.stop(serverInstance);
+            process.exit(code);
+        });
     });
 }
-
