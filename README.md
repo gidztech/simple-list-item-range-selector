@@ -21,9 +21,9 @@ This is a small UI library that allows you to take a list of items, e.g. `<li>`s
 Try out the library using the demo page:
 https://gidztech.github.io/simple-list-item-range-selector/demo/
 
-<div style="text-align: center">
+<p align="center">
     <img src="http://i.imgur.com/qbAIj3M.png" alt="Demo" />
-</div>
+</p>
 
 ## Usage
 ### API
