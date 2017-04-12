@@ -47,13 +47,7 @@ let SimpleListItemRangeSelector = {
 
                 if (_allItemElements) {
                     _resetDOM();
-
-                    if (_isValidClickMode(clickMode)) {
-                        _clickMode = clickMode;
-                    } else {
-                        _clickMode = SimpleListItemRangeSelector.clickModes.CTRL_CLICK_TO_SELECT;
-                        console.warn('Invalid clickMode was specified. Defaulted to "CTRL_CLICK_TO_SELECT"');
-                    }
+                    _setClickMode(clickMode, SimpleListItemRangeSelector.clickModes.CTRL_CLICK_TO_SELECT);
 
                     if (onSelectionChanged && typeof onSelectionChanged === 'function') {
                         _onSelectionChanged = onSelectionChanged;
@@ -70,6 +64,15 @@ let SimpleListItemRangeSelector = {
                 }
             } else {
                 throw Error('You need to specify a valid containerNode');
+            }
+        }
+
+        function _setClickMode(clickMode, defaultMode) {
+            if (_isValidClickMode(clickMode)) {
+                _clickMode = clickMode;
+            } else {
+                _clickMode = defaultMode;
+                console.warn('Invalid clickMode was specified. Defaulted to "' + defaultMode.toString() + '"');
             }
         }
 
@@ -358,6 +361,7 @@ let SimpleListItemRangeSelector = {
         let instance = {
             id,
             init: _init,
+            setClickMode: _setClickMode,
             selectItem: _selectItem,
             unselectItem: _unselectItem,
             disableRangeSelection: _disableRangeSelection,

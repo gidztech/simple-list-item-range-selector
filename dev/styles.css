@@ -1,3 +1,24 @@
+.main {
+    float: left;
+}
+
+.selected-items {
+    float: right;
+    width: 200px;
+    max-height: 400px;
+    overflow: auto;
+}
+
+.selected-items > h1 {
+    font-size: 24px;
+    margin: 0;
+    padding: 0;
+}
+
+.selected-items > table {
+    margin-top: 12px;
+}
+
 ul {
     padding: 0;
     list-style-type: none;
