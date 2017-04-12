@@ -17,6 +17,14 @@ This is a small UI library that allows you to take a list of items, e.g. `<li>`s
 - Supports appending a CSS class for selected nodes
 - Supports custom logic from your app to be hooked in when the selection changes
 
+## Demo
+Try out the library using the demo page:
+https://gidztech.github.io/simple-list-item-range-selector/demo/
+
+<div style="text-align: center">
+    <img src="http://i.imgur.com/qbAIj3M.png" alt="Demo" />
+</div>
+
 ## Usage
 ### API
 #### SimpleListItemRangeSelector
@@ -94,5 +102,6 @@ onPageReceived.subscribe(() => {
     }, 100);
 });
 ```
+
 ## Contribute
 Check out the [Contributing.md](https://github.com/gidztech/simple-list-item-range-selector/blob/master/CONTRIBUTING.md) file.
