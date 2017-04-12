@@ -4,7 +4,7 @@
   "description": "Small UI library that allows you to take a list of items and attach selection events to it",
   "main": "simple-list-item-range-selector.js",
   "scripts": {
-    "test": "webpack --config webpack.config.demo.js && node test/phantomFlow.js",
+    "test": "webpack --config webpack.config.demo.js && node node_modules/babel-cli/bin/babel.js test/flows --extensions=\".es6\" --out-dir test/flows && node test/phantomFlow.js",
     "build": "webpack --config webpack.config.prod.js",
     "build-demo": "webpack --config webpack.config.demo.js",
     "demo": "node test/server.js start",
@@ -21,6 +21,7 @@
   },
   "homepage": "https://github.com/gidztech/simple-list-item-range-selector#readme",
   "devDependencies": {
+    "babel-cli": "^6.24.1",
     "babel-core": "^6.23.1",
     "babel-loader": "^6.3.2",
     "babel-preset-es2015": "^6.22.0",
