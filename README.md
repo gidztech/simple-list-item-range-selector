@@ -18,12 +18,8 @@ This is a small UI library that allows you to take a list of items, e.g. `<li>`s
 - Supports custom logic from your app to be hooked in when the selection changes
 
 ## Demo
-Try out the library using the demo page:
+Try out the live demo:
 https://gidztech.github.io/simple-list-item-range-selector/demo/
-
-<p align="center">
-    <img src="http://i.imgur.com/qbAIj3M.png" alt="Demo" />
-</p>
 
 ## Usage
 ### API
