@@ -30,7 +30,8 @@ let flow = require('phantomflow').init({
     createReport: true,
     test: filterTest,
     remoteDebug: remoteDebug,
-    dashboard: dashboard
+    dashboard: dashboard,
+    includes: 'test/includes/'
 });
 
 
