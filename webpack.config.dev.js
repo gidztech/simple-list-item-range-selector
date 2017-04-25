@@ -4,7 +4,7 @@ const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 let webpackDevConfig = getWebpackBaseConfig();
-webpackDevConfig.devtool = 'cheap-eval-source-map';
+webpackDevConfig.devtool = 'inline-source-map';
 webpackDevConfig.entry = [
     'webpack-dev-server/client?http://localhost:8080',
     'webpack/hot/only-dev-server',

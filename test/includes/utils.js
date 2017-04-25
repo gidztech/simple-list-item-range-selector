@@ -1,3 +1,5 @@
+var TIMEOUT_MS = 5000;
+
 var assert = {
     waitForSelector: function(selector, message) {
         return casper.waitForSelector(selector, function() {
@@ -25,7 +27,8 @@ var assert = {
                     casper.test.pass(message);
                 }, function() {
                     casper.test.fail(message + ': ' + selector + ' child should have attr ' + attrName + ' = ' + expectedValue + ', but it was ' + attrValue);
-                }
+                },
+                TIMEOUT_MS
             );
         });
     },
@@ -44,9 +47,29 @@ var assert = {
                     casper.test.pass(message);
                 }, function() {
                     casper.test.fail(message + ': ' + selector + ' child should not have attr ' + attrName + ', but it did');
+                },
+                TIMEOUT_MS
+            );
+        });
+    },
+    waitForElementCount: function (selector, expectedCount, message) {
+        casper.then(function () {
+            var count;
+            casper.waitFor(
+                function tester(){
+                    count = casper.evaluate(function (selector) {
+                        return document.querySelectorAll(selector).length;
+                    }, selector);
+                    return count === expectedCount;
+                },
+                function then() {
+                    casper.test.assertEqual(count, expectedCount, message);
+                },
+                function timeout() {
+                    casper.test.assertEqual(count, expectedCount, message);
                 }
             );
         });
-    }
+    },
 };
 

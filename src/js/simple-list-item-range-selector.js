@@ -3,8 +3,8 @@ import 'babel-polyfill';
 let _instances = [];
 
 const _clickModes = {
-    CTRL_CLICK_TO_SELECT: 0,
-    CLICK_TO_SELECT: 1
+    CTRL_CLICK_TO_SELECT: 1,
+    CLICK_TO_SELECT: 2
 };
 
 let SimpleListItemRangeSelector = {
@@ -164,6 +164,15 @@ let SimpleListItemRangeSelector = {
                 }
             } else {
                 let firstSelectedItem = document.querySelector(_itemsSelector + '[data-slirs-selected="1"]');
+
+                if (!firstSelectedItem) {
+                    // first item selected had shift modified applied so just select it normally
+                    _newSelection.push(selectedItemIndex);
+                    _lastClickedIndexWithoutShift = selectedItemIndex;
+                    updateDOM(_newSelection);
+                    return;
+                }
+
                 let firstSelectedItemIndex = _indexOfItem(firstSelectedItem);
 
                 if (_debug) {
@@ -328,6 +337,11 @@ let SimpleListItemRangeSelector = {
         }
 
         function _reset() {
+            _unregisterEvents();
+            _resetDOM();
+        }
+
+        function _resetAndInit() {
             _init({
                     clickMode: _clickMode,
                     containerNode: _containerNode,
@@ -366,6 +380,8 @@ let SimpleListItemRangeSelector = {
             unselectItem: _unselectItem,
             disableRangeSelection: _disableRangeSelection,
             reset: _reset,
+            resetAndInit: _resetAndInit,
+            resetDOM: _resetDOM,
             unregisterEvents: _unregisterEvents,
             updateForNewItems: _updateForNewItems
         };
@@ -381,8 +397,7 @@ let SimpleListItemRangeSelector = {
         let instance = this.getInstance(id);
 
         if (instance) {
-            instance.unregisterEvents();
-            instance._resetDOM();
+            instance.reset();
             let indexToRemove = _instances.indexOf(instance);
             _instances.splice(indexToRemove, 1);
         } else {

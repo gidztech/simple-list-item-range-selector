@@ -8,18 +8,28 @@ document.body.onload = () => {
     let app = document.querySelector('.app');
     let selectedItemsContainer = document.querySelector('.selected-items');
     let initialise = document.querySelector('#initialise');
-    let itemCount = 5;
-    let addMoreItemsBtn;
+    let itemIndexCount = 5;
+    let numOfItems = 5;
     let clickMode = SimpleListItemRangeSelector.clickModes.CTRL_CLICK_TO_SELECT;
 
     function init() {
+        if (window.__test) {
+            // value types
+            if (window.__test.numOfItems) {
+                numOfItems = window.__test.numOfItems;
+                itemIndexCount = numOfItems;
+            }
+            if (window.__test.clickMode) {
+                clickMode = window.__test.clickMode;
+            }
+        }
         let containerNode = document.querySelector('.list');
         let resetNode = document.querySelector('.reset');
-        addMoreItemsBtn = document.querySelector('#addMoreItems');
-        let instance = SimpleListItemRangeSelector.createInstance('my_id');
+        let addMoreItemsBtn = document.querySelector('#addMoreItems');
+        let instance = SimpleListItemRangeSelector.createInstance('demo');
 
         addMoreItemsBtn.addEventListener('click', () => {
-            addItems();
+            addItems(5);
         });
 
         resetNode.addEventListener('click', () => {
@@ -31,7 +41,7 @@ document.body.onload = () => {
         });
 
         function initLibrary() {
-            itemCount = 0;
+            itemIndexCount = 0;
             addItems();
 
             instance.init({
@@ -47,10 +57,11 @@ document.body.onload = () => {
             });
         }
 
-        function addItems() {
-            for (let i = 0; i < 5; i++) {
+        function addItems(count) {
+            count = count || numOfItems;
+            for (let i = 0; i < count; i++) {
                 let li = document.createElement('li');
-                li.innerText = 'Test ' + ++itemCount;
+                li.innerText = 'Test ' + ++itemIndexCount;
                 containerNode.appendChild(li);
             }
 
@@ -105,7 +116,6 @@ document.body.onload = () => {
     window.__test = {
         SimpleListItemRangeSelector,
         clickMode,
-        itemCount,
-        addMoreItemsBtn
+        numOfItems
     }
 };
