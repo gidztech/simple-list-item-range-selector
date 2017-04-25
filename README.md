@@ -2,7 +2,7 @@
 
 [![CircleCI](https://circleci.com/gh/gidztech/simple-list-item-range-selector.svg?style=svg)](https://circleci.com/gh/gidztech/simple-list-item-range-selector)
 
-This is a small UI library that allows you to take a list of items, e.g. `<li>`s, and attach selection events to it. 
+Small UI library that allows you to take a list of items, e.g. `<li>`s, and attach selection events to it.
 
 ## Features
 - Supports the following click selection modes:

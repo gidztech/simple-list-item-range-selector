@@ -1,8 +1,8 @@
 {
   "name": "simple-list-item-range-selector",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Small UI library that allows you to take a list of items and attach selection events to it",
-  "main": "simple-list-item-range-selector.js",
+  "main": "dist/simple-list-item-range-selector.js",
   "scripts": {
     "test": "webpack --config webpack.config.demo.js && node node_modules/babel-cli/bin/babel.js test/flows --extensions=\".es6\" --out-dir test/flows && node test/phantomFlow.js",
     "build": "webpack --config webpack.config.prod.js",
