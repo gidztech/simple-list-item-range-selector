@@ -15,7 +15,7 @@ document.body.onload = () => {
     function init() {
         if (window.__test) {
             // value types
-            if (window.__test.numOfItems) {
+            if (typeof(window.__test.numOfItems) !== 'undefined' && window.__test.numOfItems != null) {
                 numOfItems = window.__test.numOfItems;
                 itemIndexCount = numOfItems;
             }
@@ -24,20 +24,11 @@ document.body.onload = () => {
             }
         }
         let containerNode = document.querySelector('.list');
-        let resetNode = document.querySelector('.reset');
         let addMoreItemsBtn = document.querySelector('#addMoreItems');
         let instance = SimpleListItemRangeSelector.createInstance('demo');
 
         addMoreItemsBtn.addEventListener('click', () => {
             addItems(5);
-        });
-
-        resetNode.addEventListener('click', () => {
-            while (containerNode.hasChildNodes()) {
-                containerNode.removeChild(containerNode.firstChild);
-            }
-
-            initLibrary();
         });
 
         function initLibrary() {

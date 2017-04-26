@@ -26,7 +26,7 @@ process.argv.forEach((arg, i) => {
 
 
 let flow = require('phantomflow').init({
-    debug: debugMode ? 2 : undefined,
+    debug: debugMode,
     createReport: true,
     test: filterTest,
     remoteDebug: remoteDebug,

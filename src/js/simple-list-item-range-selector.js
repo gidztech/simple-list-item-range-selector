@@ -46,7 +46,6 @@ let SimpleListItemRangeSelector = {
                 _allItemElements = containerNode.querySelectorAll(_itemsSelector);
 
                 if (_allItemElements) {
-                    _resetDOM();
                     _setClickMode(clickMode, SimpleListItemRangeSelector.clickModes.CTRL_CLICK_TO_SELECT);
 
                     if (onSelectionChanged && typeof onSelectionChanged === 'function') {
@@ -84,7 +83,7 @@ let SimpleListItemRangeSelector = {
 
             if (rangeEvent) {
                 _rangeSelectionEnabled = true;
-                _containerNode.addEventListener('selectstart', (e) => _preventDefaultHandler);
+                _containerNode.addEventListener('selectstart', _preventDefaultHandler);
             }
 
             [..._allItemElements].forEach((elem, index) => {
@@ -342,6 +341,7 @@ let SimpleListItemRangeSelector = {
         }
 
         function _resetAndInit() {
+            _reset();
             _init({
                     clickMode: _clickMode,
                     containerNode: _containerNode,
@@ -379,11 +379,10 @@ let SimpleListItemRangeSelector = {
             selectItem: _selectItem,
             unselectItem: _unselectItem,
             disableRangeSelection: _disableRangeSelection,
-            reset: _reset,
-            resetAndInit: _resetAndInit,
-            resetDOM: _resetDOM,
             unregisterEvents: _unregisterEvents,
-            updateForNewItems: _updateForNewItems
+            updateForNewItems: _updateForNewItems,
+            reset: _reset,
+            resetAndInit: _resetAndInit
         };
 
         _instances.push(instance);
