@@ -66,6 +66,15 @@ let SimpleListItemRangeSelector = {
             }
         }
 
+        function _ctrlKeyUsed(e) {
+            let isMacUser = navigator.platform.indexOf('Mac') !== -1;
+
+            if (isMacUser && e.metaKey) return true;
+            else if(!isMacUser && e.ctrlKey) return true;
+
+            return false;
+        }
+
         function _setClickMode(clickMode, defaultMode) {
             if (_isValidClickMode(clickMode)) {
                 _clickMode = clickMode;
@@ -145,7 +154,7 @@ let SimpleListItemRangeSelector = {
                 _lastClickedIndexWithoutShift = selectedItemIndex;
 
                 if (_isItemSelected(item)) {
-                    if (_clickMode === _clickModes.CTRL_CLICK_TO_SELECT && !e.ctrlKey) {
+                    if (_clickMode === _clickModes.CTRL_CLICK_TO_SELECT && !_ctrlKeyUsed(e)) {
                         // if user clicks without CTRL key, clear everything and select the one they clicked on
                         _newSelection = [];
                         _newSelection.push(selectedItemIndex);
@@ -154,7 +163,7 @@ let SimpleListItemRangeSelector = {
                         _newSelection.splice(_newSelection.indexOf(selectedItemIndex), 1);
                     }
                 } else {
-                    if (_clickMode === _clickModes.CTRL_CLICK_TO_SELECT && !e.ctrlKey) {
+                    if (_clickMode === _clickModes.CTRL_CLICK_TO_SELECT && !_ctrlKeyUsed(e)) {
                         // clear all selected items first if not using CTRL key
                         _newSelection = [];
                     }
@@ -340,7 +349,7 @@ let SimpleListItemRangeSelector = {
             _unregisterEvents({ resetEvent: true, rangeEvent:  true, clickEvent: true });
             _resetDOM();
         }
-        
+
         function _updateForNewItems(containerNode) {
             if (_debug) {
                 console.log("Going to do update for new items");
