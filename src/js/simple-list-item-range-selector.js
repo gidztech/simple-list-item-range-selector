@@ -336,25 +336,11 @@ let SimpleListItemRangeSelector = {
         }
 
         function _reset() {
-            _unregisterEvents();
+            _newSelection = [];
+            _unregisterEvents({ resetEvent: true, rangeEvent:  true, clickEvent: true });
             _resetDOM();
         }
-
-        function _resetAndInit() {
-            _reset();
-            _init({
-                    clickMode: _clickMode,
-                    containerNode: _containerNode,
-                    childSelector: _itemsSelector,
-                    resetSelector: _resetSelector,
-                    selectedClassName: _selectedClassName,
-                    onSelectionChanged: _onSelectionChanged,
-                    rangeSelectionEnabled: _rangeSelectionEnabled,
-                    debug: _debug
-                }
-            );
-        }
-
+        
         function _updateForNewItems(containerNode) {
             if (_debug) {
                 console.log("Going to do update for new items");
@@ -381,8 +367,8 @@ let SimpleListItemRangeSelector = {
             disableRangeSelection: _disableRangeSelection,
             unregisterEvents: _unregisterEvents,
             updateForNewItems: _updateForNewItems,
+            clearAllSelections: _clearAllSelectionsHandler,
             reset: _reset,
-            resetAndInit: _resetAndInit
         };
 
         _instances.push(instance);

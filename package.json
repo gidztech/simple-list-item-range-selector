@@ -1,6 +1,6 @@
 {
   "name": "simple-list-item-range-selector",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Small UI library that allows you to take a list of items and attach selection events to it",
   "main": "dist/simple-list-item-range-selector.js",
   "scripts": {

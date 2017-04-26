@@ -54,17 +54,17 @@ https://gidztech.github.io/simple-list-item-range-selector/demo/
 - `disableRangeSelection`
   * Description: Disables the range selection mode, i.e. usage of the <kbd>SHIFT</kbd> modifier key
 - `unregisterEvents (options: {})`
-  * Description: Unregisters certain or all the event handlers that were previously set up by this library
+  * Description: Un-registers certain or all the event handlers that were previously set up by this library
   * Options:
     - `resetEvent: boolean` - Reset click event for reset selector. Defaults to false. **[Optional]**
     - `rangeEvent: boolean` - Range selection event. Defaults to true. **[Optional]**
     - `clickEvent: boolean` - Click event for list items. Defaults to true. **[Optional]**
 - `updateForNewItems (containerNode: Element)`
   * Description: Adds tracking indexes and click events to new list items that have been added to the page
+- `clearAllSelections`
+    * Description: Clears all the currently selected list items
 - `reset`
-    * Description: Resets the DOM and unregisters events
-- `resetAndInit`
-    * Description: Resets the DOM, unregisters events, and then re-initialises the library with the same configuration
+    * Description: Resets the DOM and un-registers events created by this library
 
 ### ES2015 Module
 ```
