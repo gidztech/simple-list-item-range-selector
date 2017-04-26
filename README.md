@@ -62,7 +62,7 @@ https://gidztech.github.io/simple-list-item-range-selector/demo/
 - `updateForNewItems (containerNode: Element)`
   * Description: Adds tracking indexes and click events to new list items that have been added to the page
 - `reset`
-      * Description: Resets the DOM and unregisters events
+    * Description: Resets the DOM and unregisters events
 - `resetAndInit`
     * Description: Resets the DOM, unregisters events, and then re-initialises the library with the same configuration
 
