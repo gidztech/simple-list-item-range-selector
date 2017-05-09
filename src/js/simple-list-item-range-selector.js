@@ -119,7 +119,7 @@ let SimpleListItemRangeSelector = {
             }
         }
 
-        function _updateDOM(selection) {
+        function _updateDOM(selection, notify) {
             let selectedItems = [];
             let sortedSelection = selection.concat().sort();
 
@@ -143,7 +143,9 @@ let SimpleListItemRangeSelector = {
                 }
             }
 
-            _onSelectionChanged(selectedItems);
+            if (notify) {
+                _onSelectionChanged(selectedItems);
+            }
         }
 
         function _updateSelection(e, updateDOM) {
@@ -177,7 +179,7 @@ let SimpleListItemRangeSelector = {
                     // first item selected had shift modified applied so just select it normally
                     _newSelection.push(selectedItemIndex);
                     _lastClickedIndexWithoutShift = selectedItemIndex;
-                    updateDOM(_newSelection);
+                    updateDOM(_newSelection, true);
                     return;
                 }
 
@@ -231,7 +233,7 @@ let SimpleListItemRangeSelector = {
                 }
             }
 
-            updateDOM(_newSelection);
+            updateDOM(_newSelection, true);
         }
 
         function _selectItemsWithinRange({start, end}) {
@@ -273,7 +275,7 @@ let SimpleListItemRangeSelector = {
 
         function _clearAllSelectionsHandler() {
             _newSelection = [];
-            _updateDOM(_newSelection);
+            _updateDOM(_newSelection, false);
         }
 
         function _preventDefaultHandler(e) {
@@ -316,7 +318,7 @@ let SimpleListItemRangeSelector = {
                 _newSelection.push(index);
             }
 
-            _updateDOM(_newSelection);
+            _updateDOM(_newSelection, false);
         }
 
         function _unselectItem(item) {
@@ -325,7 +327,7 @@ let SimpleListItemRangeSelector = {
                 _unselectItemAtIndex(index);
             }
 
-            _updateDOM(_newSelection);
+            _updateDOM(_newSelection, false);
         }
 
         function _disableRangeSelection() {
