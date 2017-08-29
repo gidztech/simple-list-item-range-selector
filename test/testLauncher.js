@@ -17,10 +17,10 @@ let serverInstance = server.start(() => {
     });
 
     mocha.run(function(failures){
-        // server.stop(serverInstance);
-        // process.on('exit', function () {
-        //     process.exit(failures);
-        // });
+        server.stop(serverInstance);
+        process.on('exit', function () {
+            process.exit(failures);
+        });
     });
 });
 
