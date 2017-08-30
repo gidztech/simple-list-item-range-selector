@@ -1,105 +1,99 @@
-let myFlow = {
-    type: 'flow',
-    name: 'my flow',
-    paths: [{
-        type: 'step',
-        func: () => console.log('step 1')
-    }, {
-        type: 'step',
-        func: () => console.log('step 2')
-    }, {
-        type: 'step',
-        func: () => console.log('step 3')
-    }, {
-        type: 'branch',
-        chance: [{
-            type: 'chance',
-            name: 'chance 1',
-            paths: [{
-                type: 'step',
-                func: () => console.log('chance1 - step 4')
-            }, {
-                type: 'step',
-                func: () => console.log('chance1 - step 5')
-            }, {
-                type: 'branch',
-                decision: [{
-                    type: 'decision',
-                    name: 'decision 1',
-                    paths: [{
-                        type: 'step',
-                        func: () => console.log('chance1 - decision1 - step 6')
-                    }, {
-                        type: 'step',
-                        func: () => console.log('chance1 - decision1 - step 7')
-                    }
-                    ]
-                }, {
-                    type: 'decision',
-                    name: 'decision 2',
-                    paths: [{
-                        type: 'step',
-                        func: () => console.log('chance1 - decision2 - step 8')
-                    }, {
-                        type: 'step',
-                        func: () => console.log('chance1 - decision2 - step 9')
-                    }]
-                }
-                ]
-            }, {
-                type: 'step',
-                func: () => console.log('chance1 - step 10')
-            }, {
-                type: 'step',
-                func: () => console.log('chance1 - step 11')
+class Node {
+    constructor(fn) {
+        this.fn = fn;
+        this.next = [];
+    }
+}
 
+
+function createStep(fn) {
+    currentNode.fn = fn;
+
+    const nextNode = new Node();
+    currentNode.next.push(nextNode);
+
+    currentNode = nextNode;
+}
+
+function createFork(obj){
+
+    let branchNode = currentNode;
+    let nodeAfterBranch = new Node();
+
+    Object.keys(obj).forEach(key => {
+        let nextNode = new Node();
+        currentNode.next.push(nextNode);
+        currentNode = nextNode;
+        obj[key]();
+        currentNode.next.push(nodeAfterBranch);
+        currentNode = branchNode;
+    });
+
+    currentNode = nodeAfterBranch;
+
+}
+
+const startNode = new Node();
+let currentNode = startNode;
+
+
+createStep(() => {
+    console.log('step 1');
+});
+createStep(() => {
+    console.log('step 2');
+});
+createFork({
+    a: () => {
+        createStep(() => {
+            console.log('fork a: step 3');
+        });
+        createStep(() => {
+            console.log('fork a: step 4');
+        });
+        createFork({
+            c: () => {
+                createStep(() => {
+                    console.log('fork c: step 5');
+                });
+                createStep(() => {
+                    console.log('fork c: step 6');
+                });
+            },
+            d: () => {
+                createStep(() => {
+                    console.log('fork d: step 7');
+                });
+                createStep(() => {
+                    console.log('fork d: step 8');
+                });
             }
-            ]
-        }, {
-            type: 'chance',
-            name: 'chance 2',
-            paths: [{
-                type: 'step',
-                func: () => console.log('chance2 - step 12')
-            }, {
-                type: 'step',
-                func: () => console.log('chance2 - step 13')
-            }, {
-                type: 'branch',
-                decision: [{
-                    type: 'decision',
-                    name: 'decision 3',
-                    paths: [
-                        {
-                            type: 'step',
-                            func: () => console.log('chance2 - decision3 - step 14')
-                        }, {
-                            type: 'step',
-                            func: () => console.log('chance2 - decision3 - step 15')
-
-                        }
-
-                    ]
-                }, {
-                    type: 'decision',
-                    name: 'decision 4',
-                    paths: [
-                        {
-                            type: 'step',
-                            func: () => console.log('chance2 - decision4 - step 16')
-                        }, {
-                            type: 'step',
-                            func: () => console.log('chance2 - decision4 - step 17')
-
-                        }
-
-                    ]
-                }
-                ]
-            }
-            ]
-        }
-        ]
+        });
+        createStep(() => {
+            console.log('step 9');
+        });
+        createStep(() => {
+            console.log('step 10');
+        });
     },
-    ]
-};
+    b: () => {
+        createStep(() => {
+            console.log('fork b: step 11');
+        });
+        createStep(() => {
+            console.log('fork b: step 12');
+        });
+    }
+});
+
+createStep(() => {
+    console.log('step 13');
+});
+createStep(() => {
+    console.log('step 14');
+});
+createStep(() => {
+    console.log('step 15');
+});
+
+

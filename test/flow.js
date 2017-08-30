@@ -1,48 +1,56 @@
-module.exports = class {
+class Node {
+    constructor(fn) {
+        this.fn = fn;
+        this.connections = [];
+    }
+}
+
+module.exports = class Flow {
     constructor(name) {
-        this.flow = {
-            type: 'flow',
-            name: name,
-            paths: []
-        }
-    }
-    flow () {
-        return this.flow;
-    }
-    step(func) {
-        let s = {
-            type: 'step',
-            func: func
-        };
-
-        if (!this.isInBranch){
-            this.flow.paths.push(s);
-        } else {
-            return s;
-        }
+        this.name = name;
+        this.startNode = new Node();
+        this.currentNode = this.startNode;
     }
 
-    chance(obj) {
-        this.isInBranch = true;
-        // do stuff
+    createStep(fn) {
+        this.currentNode.fn = fn;
+        const nextNode = new Node();
+        this.currentNode.connections.push(nextNode);
+        this.currentNode = nextNode;
 
-        let branch = {
-            type: 'branch',
-            chance: []
-        };
 
-        for (let c in obj) {
-            if (obj.hasOwnProperty(c)) {
-                branch.chance.push = {
-                    type: 'chance',
-                    name: c,
-                    paths: obj[c]
-                };
+    }
+    createFork(obj) {
+        let branchNode = this.currentNode;
+        let nodeAfterBranch = new Node();
+
+        Object.keys(obj).forEach(key => {
+            let nextNode = new Node();
+            this.currentNode.connections.push(nextNode);
+            this.currentNode = nextNode;
+            obj[key]();
+            this.currentNode.connections.push(nodeAfterBranch);
+            this.currentNode = branchNode;
+        });
+
+        this.currentNode = nodeAfterBranch;
+    }
+    traverse() {
+        let node = this.startNode;
+        console.log(this.name);
+
+        function t(node) {
+            if (typeof node.fn) {
+                console.log(node.fn.toString());
             }
+
+            node.connections.forEach(nextNode => {
+               return t(nextNode);
+            });
+
+            return '';
         }
 
-        this.flow.paths.push(branch);
-
-        this.isInBranch = false;
+        return t(node);
     }
 };
